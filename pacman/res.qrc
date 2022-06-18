@@ -1,0 +1,26 @@
+<RCC>
+    <qresource prefix="/">
+        <file>images/tmp.png</file>
+        <file>map/map1.txt</file>
+        <file>base.cpp</file>
+        <file>base.h</file>
+        <file>game.cpp</file>
+        <file>game.h</file>
+        <file>ghost.cpp</file>
+        <file>ghost.h</file>
+        <file>main.cpp</file>
+        <file>mainwindow.cpp</file>
+        <file>mainwindow.h</file>
+        <file>mainwindow.ui</file>
+        <file>pacman.cpp</file>
+        <file>pacman.h</file>
+        <file>pacman.pro</file>
+        <file>res.qrc</file>
+        <file>tmp.png</file>
+        <file>images/dot.png</file>
+        <file>images/dotb.png</file>
+        <file>images/gate.png</file>
+        <file>images/power_ball.png</file>
+        <file>images/wall.png</file>
+    </qresource>
+</RCC>

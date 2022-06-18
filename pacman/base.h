@@ -1,7 +1,6 @@
 #ifndef BASE_H
 #define BASE_H
 
-
 #include <QGraphicsView>
 #include <QGraphicsScene>
 #include <QGraphicsItem>

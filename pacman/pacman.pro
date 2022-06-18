@@ -24,3 +24,6 @@ HEADERS  += mainwindow.h \
     pacman.h
 
 FORMS    += mainwindow.ui
+
+RESOURCES += \
+    res.qrc

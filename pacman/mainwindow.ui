@@ -47,6 +47,16 @@
    <property name="layoutDirection">
     <enum>Qt::LeftToRight</enum>
    </property>
+   <widget class="QGraphicsView" name="graphicsView">
+    <property name="geometry">
+     <rect>
+      <x>170</x>
+      <y>70</y>
+      <width>821</width>
+      <height>461</height>
+     </rect>
+    </property>
+   </widget>
   </widget>
   <widget class="QMenuBar" name="menuBar">
    <property name="geometry">
@@ -54,7 +64,7 @@
      <x>0</x>
      <y>0</y>
      <width>2400</width>
-     <height>21</height>
+     <height>26</height>
     </rect>
    </property>
   </widget>

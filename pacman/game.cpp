@@ -3,19 +3,13 @@
 #include <QDialog>
 #include <QDebug>
 #include <QThread>
-
-
+#include <QGraphicsView>
+#include <QGraphicsScene>
+#include <QGraphicsItem>
 
 using namespace BaseH;
 
-void Game::pacman_handler(){
-    pacman -> move();
-    //qDebug() << x() << " " << y() << endl;
-
-//    qDebug() << "what fuck " << endl;
-}
-
-Game::Game() : QObject()
+Gamee::Gamee(QString xxxx) : QGraphicsScene(80,100,400,400)
 {
     startX = 80;
     startY = 100;
@@ -27,9 +21,10 @@ Game::Game() : QObject()
         for(int j=0;j<Height;++j)
             map[i][j] = Space;
 //    qDebug() << "555 " << endl;
-    pacman = new Pacman(10,10);//设置初始位置
+    pacman = new Pacman(1,1);//设置初始位置
+    addItem(pacman);
 
-//    qDebug() << "234 " << endl;
+    qDebug() << "234 " << endl;
     pacman_timer = new QTimer(this);
     pacman_timer->start(10);
     timerThread = new QThread;
@@ -39,7 +34,14 @@ Game::Game() : QObject()
 
 }
 
-void Game::newpress(Qt::Key key){
+void Gamee::pacman_handler(){
+    pacman -> move();
+//    qDebug() << x() << " " << y() << endl;
+
+//    qDebug() << "what fuck " << endl;
+}
+
+void Gamee::newpress(Qt::Key key){
     qDebug() << "Press" << key  << endl;
     switch (key)
     {
@@ -50,4 +52,8 @@ void Game::newpress(Qt::Key key){
         default: break;
     }
     //qDebug() << pacman_timer -> timeout() << endl;
+}
+Gamee::~Gamee()
+{
+    //Do Nothing
 }

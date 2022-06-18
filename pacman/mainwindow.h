@@ -19,11 +19,11 @@ public:
 
 private:
     Ui::MainWindow *ui;
-    Game* game;
+    Gamee* gamee;
 
 protected:
     void keyPressEvent(QKeyEvent *);
-    virtual void paintEvent(QPaintEvent *event);
+    //virtual void paintEvent(QPaintEvent *event);
 
 };
 

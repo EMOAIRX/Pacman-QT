@@ -4,7 +4,7 @@
 
 using namespace BaseH;
 #define W ObjectWidth
-#define IMAGE_INIT QPixmap("tmp.png").scaled(W,W)
+#define IMAGE_INIT QPixmap(":/images/wall.png")
 
 Pacman::~Pacman(){
     //do nothing
