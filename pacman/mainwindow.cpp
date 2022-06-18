@@ -3,46 +3,39 @@
 #include <QMouseEvent>
 #include <QKeyEvent>
 #include <QString>
+#include <Qpainter>
+#include <QDebug>
+
+using namespace BaseH;
+#define W BaseH::ObjectWidth
+
+
+void MainWindow::paintEvent(QPaintEvent *event){
+    Q_UNUSED(event);
+    QPainter painter(this);
+    painter.begin(this);
+    qDebug() << startX << " " << startY << " " << startX+W*Width << " " << startY+W*Height << endl;
+    painter.drawRect(startX,startY,startX+W*Width,startY+W*Height);
+    painter.end();
+}
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
+    qDebug() << "233 " << endl;
+    game = new Game();
+    qDebug() << "233 " << endl;
+
 
 }
 
 void MainWindow::keyPressEvent(QKeyEvent *e)
 {
-//   int x = ui->pushButton->x();
-//   int y = ui->pushButton->y();
-    QString p;
-    p.setNum(e -> key(),10);
-    ui->Key_event->setText(p);
-//   switch (e->key())
-//   {
-//   case Qt::Key_W : ui->pushButton->move(x, y-10); break;
-//   case Qt::Key_S : ui->pushButton->move(x, y+10); break;
-//   case Qt::Key_A : ui->pushButton->move(x-10, y); break;
-//   case Qt::Key_D : ui->pushButton->move(x+10, y); break;
-//   }
-}
+    qDebug() << game -> pacman_timer -> remainingTime();
+    game -> newpress( static_cast<Qt::Key> (e -> key()) );
 
-
-void MainWindow::mousePressEvent(QMouseEvent *e)
-{
-//   int x = ui->pushButton->x();
-//   int y = ui->pushButton->y();
-    QString p;
-    p.setNum((e->x())*10000+(e->y()),10);
-    ui->Key_event->setText(p);
-//   switch (e->key())
-//   {
-//   case Qt::Key_W : ui->pushButton->move(x, y-10); break;
-//   case Qt::Key_S : ui->pushButton->move(x, y+10); break;
-//   case Qt::Key_A : ui->pushButton->move(x-10, y); break;
-//   case Qt::Key_D : ui->pushButton->move(x+10, y); break;
-//   }
 }
 
 
