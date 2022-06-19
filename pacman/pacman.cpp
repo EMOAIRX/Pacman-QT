@@ -10,8 +10,9 @@ Pacman::~Pacman(){
     //do nothing
 }
 
-Pacman::Pacman(int sx = 5,int sy = 5) : Base(IMAGE_INIT)
+Pacman::Pacman(int sx,int sy,Game* father) : Base(IMAGE_INIT)
 {
+    game = father;
     nxtDir = Left;
     this -> setPos(startX + W*sx,startY+W*sy);
 }
@@ -23,6 +24,16 @@ mapstate nxt(int x,int y,dirstate dir){
     return static_cast<mapstate> (map[x][y]);
 }
 
+bool canmove(int x,int y,dirstate dir){
+    auto val = nxt(x,y,dir);
+    return val != Wall && val != Door;
+}
+
+void Pacman::obtain(int x,int y){
+    this -> game -> obtain(x,y);
+}
+
+
 void Pacman::move(){
 //    preX,preY;
     int ox,oy;
@@ -31,8 +42,10 @@ void Pacman::move(){
     if(ox % W == 0 && oy % W == 0){
         preX = ox / W;
         preY = oy / W;
-        curDir = nxtDir;
-        if(nxt(preX,preY,curDir) == Wall) curDir = nxtDir = Stop;
+        this -> obtain(preX,preY);
+        if(canmove(preX,preY,nxtDir)) curDir = nxtDir;
+        if(!canmove(preX,preY,curDir)) curDir = Stop;
+        nxtDir = curDir;//这里手感好像不太好，写完可以微调一下
     }
     this -> setPos(x()+deltax[curDir],y()+deltay[curDir]);
     qDebug() << x() << " " << y() << endl;

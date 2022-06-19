@@ -10,15 +10,6 @@ using namespace BaseH;
 #define W BaseH::ObjectWidth
 
 
-/*void MainWindow::paintEvent(QPaintEvent *event){
-    Q_UNUSED(event);
-    QPainter painter(this);
-    painter.begin(this);
-    qDebug() << startX << " " << startY << " " << startX+W*Width << " " << startY+W*Height << endl;
-    painter.drawRect(startX,startY,startX+W*Width,startY+W*Height);
-    painter.end();
-}*/
-
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::MainWindow)

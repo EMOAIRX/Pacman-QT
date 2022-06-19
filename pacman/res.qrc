@@ -24,5 +24,6 @@
         <file>images/wall.png</file>
         <file>images/ghost/bl1.png</file>
         <file>images/pacman/a1.png</file>
+        <file>images/pacman/b1.png</file>
     </qresource>
 </RCC>

@@ -17,9 +17,13 @@ public:
     ~Game();
     Pacman* pacman;
     QTimer* pacman_timer;
+    QTimer* panic_timer;//Invincible time after taking drugs
     QThread* timerThread;
     Base*** uimap;
     void newpress(Qt::Key);
+    void obtain(int x,int y);
+
+    friend class Pacman;
 private slots:
     void pacman_handler();
 };

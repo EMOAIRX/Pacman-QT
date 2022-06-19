@@ -76,10 +76,12 @@ Game::Game(int WW,int HH,QString map_src) : QGraphicsScene(50,50,WW*20,HH*20)
                     addItem(uimap[j][i]);
                     break;
                 case 'p':
-                    pacman = new Pacman(j,i);
+                    pacman = new Pacman(j,i,this);
                     map[j][i] = Space;
-                    uimap[j][i] = pacman;
+                    uimap[j][i] = new Base(blankpng);
+                    uimap[j][i]->setPos(x,y);
                     addItem(pacman);
+                    addItem(uimap[j][i]);
                     break;
                 case 'g':
                     map[j][i] = Space;
@@ -95,30 +97,63 @@ Game::Game(int WW,int HH,QString map_src) : QGraphicsScene(50,50,WW*20,HH*20)
     //addItem(pacman);
 
     qDebug() << "234 " << endl;
-    pacman_timer = new QTimer(this);
-    pacman_timer->start(10);
     timerThread = new QThread;
+    pacman_timer = new QTimer(this);
+    panic_timer = new QTimer(this);
     pacman_timer -> moveToThread(timerThread);
-    connect(pacman_timer, &QTimer::timeout, [=](){this -> pacman_handler();});
-    timerThread -> start();
+    panic_timer -> moveToThread(timerThread);
 
+    pacman_timer->start(10);
+    connect(pacman_timer, &QTimer::timeout, [=](){this -> pacman_handler();});
+
+    timerThread -> start();
+}
+
+
+void Game::obtain(int x,int y){
+    if(map[x][y] == Food){
+        map[x][y] = Space;
+
+        QPixmap blankpng;
+        uimap[x][y] ->setPixmap(blankpng);
+    }
+
+    if(map[x][y] == Medicine){
+        map[x][y] = Space;
+        QPixmap blankpng;
+        uimap[x][y] ->setPixmap(blankpng);
+
+        QPixmap normalpng(":/images/pacman/a1.png");
+        QPixmap panicpng(":/images/pacman/b1.png");
+        pacman -> setPixmap(panicpng);
+        pacman -> state = Panic;
+        qDebug() << "START PANIC" << endl;
+        panic_timer -> start(9000);
+        connect(panic_timer, &QTimer::timeout, [=](){
+            pacman -> state = Normal;
+            panic_timer -> stop();
+            pacman -> setPixmap(normalpng);
+            qDebug() << "END PANIC" << endl;
+        });
+    }
 }
 
 void Game::pacman_handler(){
     pacman -> move();
-//    qDebug() << x() << " " << y() << endl;
-
-//    qDebug() << "what fuck " << endl;
 }
 
 void Game::newpress(Qt::Key key){
     qDebug() << "Press" << key  << endl;
     switch (key)
     {
-        case Qt::Key_W : pacman -> set_nxtDir(Up); break;
-        case Qt::Key_S : pacman -> set_nxtDir(Down); break;
-        case Qt::Key_A : pacman -> set_nxtDir(Left); break;
-        case Qt::Key_D : pacman -> set_nxtDir(Right); break;
+    case Qt::Key_W : pacman -> set_nxtDir(Up); break;
+    case Qt::Key_S : pacman -> set_nxtDir(Down); break;
+    case Qt::Key_A : pacman -> set_nxtDir(Left); break;
+    case Qt::Key_D : pacman -> set_nxtDir(Right); break;
+    case Qt::Key_Up : pacman -> set_nxtDir(Up); break;
+    case Qt::Key_Down : pacman -> set_nxtDir(Down); break;
+    case Qt::Key_Left : pacman -> set_nxtDir(Left); break;
+    case Qt::Key_Right : pacman -> set_nxtDir(Right); break;
         default: break;
     }
     //qDebug() << pacman_timer -> timeout() << endl;
