@@ -11,6 +11,7 @@ public:
 //    ~Ghost();
     void obtain(int,int);
     void move();
+    void caught();
     friend class Game;
 private:
     bool canmove(int, int, BaseH::dirstate);
@@ -18,6 +19,7 @@ private:
     int id;
     BaseH::ghoststate state;
     int outcave_time;
+    int init_posx,init_posy;
 };
 
 

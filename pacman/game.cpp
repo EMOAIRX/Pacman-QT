@@ -113,6 +113,13 @@ void Game::start(){
     }
 }
 
+void Game::over(){
+    pacman_timer->stop();
+    for(int i=0;i<4;++i) ghost_timer[i]->stop();
+    panic_timer -> stop();
+}
+
+
 void Game::obtain(int x,int y){
     if(map[x][y] == Food){
         map[x][y] = Space;

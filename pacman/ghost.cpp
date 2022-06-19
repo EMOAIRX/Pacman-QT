@@ -9,11 +9,18 @@ using namespace BaseH;
 
 Ghost::Ghost(int ghid,int sx,int sy,Game* father) : Base(IMAGE_INIT)
 {
+    init_posx = sx;
+    init_posy = sy;
     id = ghid;
     game = father;
     this -> setPos(startX + W*sx,startY+W*sy);
     curDir = nxtDir = Stop;
 
+}
+
+void Ghost::caught(){
+    this -> setPos(startX + W*init_posx,startY+W*init_posy);
+    //这里需要回到笼子，具体怎么搞之后再说
 }
 
 bool Ghost::canmove(int x,int y,dirstate dir){

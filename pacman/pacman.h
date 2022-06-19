@@ -9,6 +9,8 @@ public:
     ~Pacman();
     void obtain(int,int);
     void move();
+    void Collision_determination();
+    void caught();
     friend class Game;
 private:
     Game* game;

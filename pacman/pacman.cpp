@@ -1,6 +1,7 @@
 #include "game.h"
 #include <QDebug>
 #include <Qpainter>
+#include <QGraphicsItem>
 
 using namespace BaseH;
 #define W ObjectWidth
@@ -21,6 +22,18 @@ void Pacman::obtain(int x,int y){
     this -> game -> obtain(x,y);
 }
 
+void Pacman::caught(){
+    game -> over();
+}
+
+void Pacman::Collision_determination(){
+    for(int i=0;i<4;++i){
+        if(this -> QGraphicsItem::collidesWithItem(game->ghost[i],Qt::IntersectsItemShape)){
+            if(this -> state == Normal) this -> caught();
+            if(this -> state == Panic) game -> ghost[i] -> caught();
+        }
+    }
+}
 
 void Pacman::move(){
 //    preX,preY;
@@ -36,5 +49,6 @@ void Pacman::move(){
         nxtDir = curDir;//这里手感好像不太好，写完可以微调一下
     }
     this -> setPos(x()+deltax[curDir],y()+deltay[curDir]);
+    this -> Collision_determination();
 //    qDebug() << x() << " " << y() << endl;
 }

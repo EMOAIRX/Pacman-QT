@@ -24,7 +24,7 @@ public:
     void newpress(Qt::Key);
     void obtain(int x,int y);
     void start();
-
+    void over();
     friend class Pacman;
     friend class Ghost;
 private:
