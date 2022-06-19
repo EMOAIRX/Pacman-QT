@@ -1,11 +1,48 @@
 #include "ghost.h"
 #include <QDebug>
+#include <iostream>
 using namespace BaseH;
 #define W ObjectWidth
 #define IMAGE_INIT QPixmap(":/images/ghost/bl1.png")
 //Ghost::Ghost(){
 
 //}
+
+void Ghost::get_dis_map(){
+#define fi first
+#define se second
+
+for(int j=0;j<Height;++j){
+    for(int i=0;i<Width;++i){
+        std::cout << " " <<map[i][j];
+    }std::cout << "\n";
+}
+    typedef std::pair<int,int> pii;
+    int front,rear;
+    pii q[35*35];
+    front=rear=0;
+    memset(dis_map,-1,sizeof(dis_map));
+    q[rear++]={init_posx,init_posy};
+    dis_map[init_posx][init_posy] = 0;
+    while(front<rear){
+        pii u = q[front++];
+        for(int d=0;d<4;++d){
+            if(nxt(u.fi,u.se,d) == Wall) continue;
+            pii v={u.fi+deltax[d],u.se+deltay[d]};
+            if(dis_map[v.fi][v.se] == -1){
+                dis_map[v.fi][v.se]=dis_map[u.fi][u.se]+1;
+                q[rear++]=v;
+            }
+        }
+    }
+for(int j=0;j<Height;++j){
+    for(int i=0;i<Width;++i){
+        std::cout << " " <<map[i][j];
+    }std::cout << "\n";
+}
+#undef fi
+#undef se
+}
 
 Ghost::Ghost(int ghid,int sx,int sy,Game* father) : Base(IMAGE_INIT)
 {
@@ -15,11 +52,11 @@ Ghost::Ghost(int ghid,int sx,int sy,Game* father) : Base(IMAGE_INIT)
     game = father;
     this -> setPos(startX + W*sx,startY+W*sy);
     curDir = nxtDir = Stop;
-
 }
 
 void Ghost::caught(){
-    this -> setPos(startX + W*init_posx,startY+W*init_posy);
+    state = Backcave;
+    //this -> setPos(startX + W*init_posx,startY+W*init_posy);
     //这里需要回到笼子，具体怎么搞之后再说
 }
 
@@ -39,13 +76,37 @@ void Ghost::move(){
     if(ox % W == 0 && oy % W == 0){
         preX = ox / W;
         preY = oy / W;
-        //this -> obtain(preX,preY);
-        curDir = static_cast<dirstate> (rand() % 4);
-        while(!canmove(preX,preY,curDir)){
-            curDir = static_cast<dirstate> (rand() % 4);
+        switch (state)
+        {
+            case Incave :
+                curDir = Stop;
+                break;
+            case Outcave :
+                curDir = static_cast<dirstate> (rand() % 4);
+                while(!canmove(preX,preY,curDir)){
+                    curDir = static_cast<dirstate> (rand() % 4);
+                }
+                break;
+            case Backcave :
+                if(preX==init_posx && preY==init_posy){
+                    state = Incave;
+                    outcave_time = 2000;
+                } else{
+                    curDir = Stop;
+                    for(int d=0;d<4;++d)
+                        if(nxt(preX,preY,d)!=Wall){
+                            int nxtX=preX+deltax[d],nxtY=preY+deltay[d];
+                            if(dis_map[nxtX][nxtY]==dis_map[preX][preY]-1){
+                                curDir = static_cast<dirstate> (d);
+                                break;
+                            }
+                        }
+                }
+                break;
+            default: break;
         }
 
     }
     this -> setPos(x()+deltax[curDir],y()+deltay[curDir]);
-    qDebug() << x() << " " << y() << endl;
+//    qDebug() << x() << " " << y() << endl;
 }//ghost的移动要专门根据策略设置过，这里不清楚怎么搞，或许可以讨论一下

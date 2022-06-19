@@ -30,7 +30,13 @@ void Base::set_curDir(dirstate dir){
 mapstate Base::nxt(int x,int y,dirstate dir){
     x += deltax[dir];
     y += deltay[dir];
-    if(x < 0 || x >= Width || y < 0 || y > Height) return Wall;
+    if(x < 0 || x >= Width || y < 0 || y >= Height) return Wall;
+    return static_cast<mapstate> (map[x][y]);
+}
+mapstate Base::nxt(int x,int y,int dir){
+    x += deltax[dir];
+    y += deltay[dir];
+    if(x < 0 || x >= Width || y < 0 || y >= Height) return Wall;
     return static_cast<mapstate> (map[x][y]);
 }
 

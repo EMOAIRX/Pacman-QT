@@ -28,6 +28,7 @@ public:
     void set_nxtDir(BaseH::dirstate);
     void set_curDir(BaseH::dirstate);
     static BaseH::mapstate nxt(int,int,BaseH::dirstate);
+    static BaseH::mapstate nxt(int,int,int);
     bool canmove(int,int,BaseH::dirstate);
     //virtual void move();
 

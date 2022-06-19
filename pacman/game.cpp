@@ -6,6 +6,7 @@
 #include <QGraphicsView>
 #include <QGraphicsScene>
 #include <QGraphicsItem>
+#include <iostream>
 #include <QFile>
 using namespace BaseH;
 
@@ -87,11 +88,14 @@ Game::Game(int WW,int HH,QString map_src) : QGraphicsScene(50,50,WW*20,HH*20)
             addItem(uimap[j][i]);
         }
     }
+
+
     //pacman = new Pacman(1,1);//设置初始位置
     //addItem(pacman);
 
     qDebug() << "234 " << endl;
     for(int i=0;i<4;++i){
+        ghost[i] -> get_dis_map();
         ghost[i] -> outcave_time = 200 + i * 800;
         ghost_timer[i] = new QTimer(this);
         connect(ghost_timer[i], &QTimer::timeout, [=](){this -> ghost_handler(i);});
@@ -108,6 +112,7 @@ void Game::start(){
     pacman_timer->start(INTERVAL_pacman);
     for(int i=0;i<4;++i){
         ghost_timer[i]->start(INTERVAL_ghost);
+        ghost[i] -> state = Incave;
         ghost[i] -> set_curDir(Stop);
         ghost[i] -> set_nxtDir(Stop);
     }
@@ -149,13 +154,17 @@ void Game::obtain(int x,int y){
 }
 
 void Game::ghost_handler(int p){
+//    qDebug() << p << " " << ghost[p]->outcave_time << " " << ghost[p] ->state << endl;
     if(ghost[p]->outcave_time > 0){
-        ghost[p]->outcave_time = std::max(0,ghost[p]->outcave_time - INTERVAL_ghost);
-        ghost[p] -> curDir = Stop;
-        ghost[p] -> nxtDir = Stop;
+        ghost[p] -> outcave_time -= INTERVAL_ghost;
+        if(ghost[p] -> outcave_time <= 0){
+            ghost[p] -> outcave_time = 0;
+            ghost[p] -> state = Outcave;
+            qDebug() << p << " -- " << ghost[p]->outcave_time << " " << ghost[p] ->state << endl;
+        }
         return ;
     }
-    qDebug() << ghost[p] -> outcave_time << endl;
+    //qDebug() << ghost[p] -> outcave_time << endl;
     ghost[p] -> move();
 
 }

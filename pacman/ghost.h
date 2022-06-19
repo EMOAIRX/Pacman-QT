@@ -20,6 +20,8 @@ private:
     BaseH::ghoststate state;
     int outcave_time;
     int init_posx,init_posy;
+    int dis_map[35][35];
+    void get_dis_map();
 };
 
 
