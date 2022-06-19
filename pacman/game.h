@@ -8,16 +8,17 @@
 #include "ghost.h"
 #include "base.h"
 
-class Gamee : public QGraphicsScene
+class Game : public QGraphicsScene
 {
     Q_OBJECT
 
 public:
-    Gamee(QString);
-    ~Gamee();
+    Game(int,int,QString);
+    ~Game();
     Pacman* pacman;
     QTimer* pacman_timer;
     QThread* timerThread;
+    Base*** uimap;
     void newpress(Qt::Key);
 private slots:
     void pacman_handler();

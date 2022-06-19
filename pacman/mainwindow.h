@@ -19,7 +19,7 @@ public:
 
 private:
     Ui::MainWindow *ui;
-    Gamee* gamee;
+    Game* game;
 
 protected:
     void keyPressEvent(QKeyEvent *);

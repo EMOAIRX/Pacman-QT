@@ -22,5 +22,7 @@
         <file>images/gate.png</file>
         <file>images/power_ball.png</file>
         <file>images/wall.png</file>
+        <file>images/ghost/bl1.png</file>
+        <file>images/pacman/a1.png</file>
     </qresource>
 </RCC>

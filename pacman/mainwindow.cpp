@@ -28,10 +28,11 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->graphicsView->setStyleSheet("QGraphicsView {border: none;}");
     ui->graphicsView->setBackgroundBrush(Qt::black);
     ui->graphicsView->setFocusPolicy(Qt::NoFocus);
-    ui->graphicsView->setGeometry(1,1,1000,1000);
+    int w = 27, h = 25;
+    ui->graphicsView->setGeometry(50,50,w*20,h*20);
     //qDebug() << "233 " << endl;
-    gamee = new Gamee(":/map/map1.txt");
-    ui->graphicsView->setScene(gamee);
+    game = new Game(w,h,":/map/map1.txt");
+    ui->graphicsView->setScene(game);
     //qDebug() << "233 " << endl;
 
 
@@ -40,7 +41,7 @@ MainWindow::MainWindow(QWidget *parent) :
 void MainWindow::keyPressEvent(QKeyEvent *e)
 {
     //qDebug() << gamee -> pacman_timer -> remainingTime();
-    gamee -> newpress( static_cast<Qt::Key> (e -> key()) );
+    game -> newpress( static_cast<Qt::Key> (e -> key()) );
 
 }
 
