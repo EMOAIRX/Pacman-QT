@@ -4,6 +4,7 @@
 using namespace BaseH;
 #define W ObjectWidth
 #define IMAGE_INIT QPixmap(":/images/ghost/bl1.png")
+#define run_image QPixmap(":/images/ghost/run.png")
 //Ghost::Ghost(){
 
 //}
@@ -12,11 +13,11 @@ void Ghost::get_dis_map(){
 #define fi first
 #define se second
 
-for(int j=0;j<Height;++j){
+/*for(int j=0;j<Height;++j){
     for(int i=0;i<Width;++i){
         std::cout << " " <<map[i][j];
     }std::cout << "\n";
-}
+}*/
     typedef std::pair<int,int> pii;
     int front,rear;
     pii q[35*35];
@@ -35,11 +36,11 @@ for(int j=0;j<Height;++j){
             }
         }
     }
-for(int j=0;j<Height;++j){
+/*for(int j=0;j<Height;++j){
     for(int i=0;i<Width;++i){
         std::cout << " " <<map[i][j];
     }std::cout << "\n";
-}
+}*/
 #undef fi
 #undef se
 }
@@ -56,14 +57,16 @@ Ghost::Ghost(int ghid,int sx,int sy,Game* father) : Base(IMAGE_INIT)
 
 void Ghost::caught(){
     state = Backcave;
+    this -> setPixmap(run_image);
     //this -> setPos(startX + W*init_posx,startY+W*init_posy);
     //这里需要回到笼子，具体怎么搞之后再说
 }
 
 bool Ghost::canmove(int x,int y,dirstate dir){
     auto val = Base::nxt(x,y,dir);
-    if(val == Wall) return false;
-    if(val == Door && outcave_time > 0) return false;
+    if (val == Wall) return false;
+    if (val == Door && state==Outcave) return false;
+    if (val == Door && state==Incave && outcave_time>0) return false;
     return true;
 }
 
@@ -78,6 +81,33 @@ void Ghost::move(){
         preY = oy / W;
         switch (state)
         {
+            case Outingcave:
+                qDebug()<<"1234"<<endl;
+                if (map[preX][preY] == Door)
+                {
+                    state = Outcave;
+                    curDir = Up;
+                }
+                else
+                {
+                    for (int d=0;d<4;++d)
+                    {
+                        int nxtX=preX+deltax[d],nxtY=preY+deltay[d];
+                        auto val=map[nxtX][nxtY];
+                        if (val==Wall) continue;
+                        if (val==Door)
+                        {
+                            curDir=static_cast<dirstate> (d);
+                            break;
+                        }
+                        if (val==Space && abs(doorx-nxtX)+abs(doory-nxtY)<abs(doorx-preX)+abs(doory-preY))
+                        {
+                            curDir=static_cast<dirstate> (d);
+                            break;
+                        }
+                    }
+                }
+                break;
             case Incave :
                 curDir = Stop;
                 break;
@@ -90,6 +120,7 @@ void Ghost::move(){
             case Backcave :
                 if(preX==init_posx && preY==init_posy){
                     state = Incave;
+                    this -> setPixmap(IMAGE_INIT);
                     outcave_time = 2000;
                 } else{
                     curDir = Stop;
@@ -105,7 +136,7 @@ void Ghost::move(){
                 break;
             default: break;
         }
-
+        //qDebug()<<state<<endl;
     }
     this -> setPos(x()+deltax[curDir],y()+deltay[curDir]);
 //    qDebug() << x() << " " << y() << endl;

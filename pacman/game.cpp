@@ -66,6 +66,7 @@ Game::Game(int WW,int HH,QString map_src) : QGraphicsScene(50,50,WW*20,HH*20)
                 case '4':
                     map[j][i] = Door;
                     uimap[j][i] = new Base(gatepng);
+                    doorx=j,doory=i;
                     break;
                 case 'p':
                     pacman = new Pacman(j,i,this);
@@ -159,8 +160,8 @@ void Game::ghost_handler(int p){
         ghost[p] -> outcave_time -= INTERVAL_ghost;
         if(ghost[p] -> outcave_time <= 0){
             ghost[p] -> outcave_time = 0;
-            ghost[p] -> state = Outcave;
-            qDebug() << p << " -- " << ghost[p]->outcave_time << " " << ghost[p] ->state << endl;
+            ghost[p] -> state = Outingcave;
+            //qDebug() << p << " -- " << ghost[p]->outcave_time << " " << ghost[p] ->state << endl;
         }
         return ;
     }
@@ -174,7 +175,7 @@ void Game::pacman_handler(){
 }
 
 void Game::newpress(Qt::Key key){
-    qDebug() << "Press" << key  << endl;
+    //qDebug() << "Press" << key  << endl;
     switch (key)
     {
     case Qt::Key_W : pacman -> set_nxtDir(Up); break;
