@@ -1,15 +1,14 @@
 #ifndef PACMAN_H
 #define PACMAN_H
 #include "base.h"
-class Game;
 
 class Pacman : public Base
 {
 public:
     Pacman(int,int,Game*);
     ~Pacman();
-    void move();
     void obtain(int,int);
+    void move();
     friend class Game;
 private:
     Game* game;

@@ -16,13 +16,14 @@ SOURCES += main.cpp\
         mainwindow.cpp \
     base.cpp \
     pacman.cpp \
-    game.cpp
+    game.cpp \
+    ghost.cpp
 
 HEADERS  += mainwindow.h \
     base.h \
     game.h \
-    pacman.h
-
+    pacman.h \
+    ghost.h
 FORMS    += mainwindow.ui
 
 RESOURCES += \

@@ -1,5 +1,5 @@
 #include "base.h"
-
+#define Q_OBJECT
 const int BaseH::deltax[5] = {-1,1,0,0,0};
 const int BaseH::deltay[5] = {0,0,-1,1,0};
 int BaseH::Width,BaseH::Height,BaseH::ObjectWidth;
@@ -15,19 +15,11 @@ Base::Base(QPixmap pixmap)
 {
 }
 
-Base::Base()
-    : QGraphicsPixmapItem()
-{
-}
-
 void Base::set_nxtDir(dirstate dir){
     nxtDir = dir;
 }
-void Base::set_curDir(dirstate dir){
-    curDir = dir;
-}
 
-mapstate Base::nxt(int x,int y,dirstate dir){
+mapstate nxt(int x,int y,dirstate dir){
     x += deltax[dir];
     y += deltay[dir];
     if(x < 0 || x >= Width || y < 0 || y > Height) return Wall;

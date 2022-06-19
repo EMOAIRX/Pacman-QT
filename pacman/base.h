@@ -6,7 +6,7 @@
 #include <QGraphicsItem>
 #include <QTimer>
 #include <QVector>
-
+class Game;
 namespace BaseH{
     enum mapstate{Space=0,Wall=1,Food=2,Medicine=3,Door=4};
     enum pacmanstate{Normal=0,Panic=1};
@@ -17,13 +17,19 @@ namespace BaseH{
     extern int Width,Height,ObjectWidth;
     extern int startX,startY;
     extern int map[35][35];
+    extern const int INTERVAL_ghost,INTERVAL_pacman;
 }
 
 class Base:public QGraphicsPixmapItem
 {
 public:
     Base(QPixmap);
+    Base();
     void set_nxtDir(BaseH::dirstate);
+    void set_curDir(BaseH::dirstate);
+    static BaseH::mapstate nxt(int,int,BaseH::dirstate);
+    bool canmove(int,int,BaseH::dirstate);
+    //virtual void move();
 
 protected:
     BaseH::dirstate curDir,nxtDir;

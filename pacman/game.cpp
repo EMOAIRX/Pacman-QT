@@ -9,6 +9,7 @@
 #include <QFile>
 using namespace BaseH;
 
+
 Game::Game(int WW,int HH,QString map_src) : QGraphicsScene(50,50,WW*20,HH*20)
 {
     startX = 50;
@@ -34,9 +35,9 @@ Game::Game(int WW,int HH,QString map_src) : QGraphicsScene(50,50,WW*20,HH*20)
     QPixmap wallpng(":/images/wall.png");
     QPixmap foodpng(":/images/dot.png");
     QPixmap medicinepng(":/images/power_ball.png");
-    QPixmap gatepng(":/images/gate.png");
-    QPixmap ghostpng(":/images/ghost/bl1.png");
+    QPixmap gatepng(":/images/gate.png");//这个是不是变成全局变量更好一点
     qDebug() << "244" << endl;
+    static int num_ghost = 0;
     for (int i=0;i<Height;i++)
     {
         QByteArray line = mapfile.readLine();
@@ -48,67 +49,69 @@ Game::Game(int WW,int HH,QString map_src) : QGraphicsScene(50,50,WW*20,HH*20)
                 case '0':
                     map[j][i] = Space;
                     uimap[j][i] = new Base(blankpng);
-                    uimap[j][i]->setPos(x,y);
-                    addItem(uimap[j][i]);
                     break;
                 case '1':
                     map[j][i] = Wall;
                     uimap[j][i] = new Base(wallpng);
-                    uimap[j][i]->setPos(x,y);
-                    addItem(uimap[j][i]);
                     break;
                 case '2':
                     map[j][i] = Food;
                     uimap[j][i] = new Base(foodpng);
-                    uimap[j][i]->setPos(x,y);
-                    addItem(uimap[j][i]);
                     break;
                 case '3':
                     map[j][i] = Medicine;
                     uimap[j][i] = new Base(medicinepng);
-                    uimap[j][i]->setPos(x,y);
-                    addItem(uimap[j][i]);
                     break;
                 case '4':
                     map[j][i] = Door;
                     uimap[j][i] = new Base(gatepng);
-                    uimap[j][i]->setPos(x,y);
-                    addItem(uimap[j][i]);
                     break;
                 case 'p':
                     pacman = new Pacman(j,i,this);
+                    addItem(pacman);
+
                     map[j][i] = Space;
                     uimap[j][i] = new Base(blankpng);
-                    uimap[j][i]->setPos(x,y);
-                    addItem(pacman);
-                    addItem(uimap[j][i]);
                     break;
                 case 'g':
+                    ghost[num_ghost] = new Ghost(num_ghost,j,i,this);
+                    addItem(ghost[num_ghost]);
+                    num_ghost++;
+
                     map[j][i] = Space;
-                    uimap[j][i] = new Base(ghostpng);
-                    uimap[j][i]->setPos(x,y);
-                    addItem(uimap[j][i]);
+                    uimap[j][i] = new Base(blankpng);
                     break;
 
             }
+            uimap[j][i]->setPos(x,y);
+            addItem(uimap[j][i]);
         }
     }
     //pacman = new Pacman(1,1);//设置初始位置
     //addItem(pacman);
 
     qDebug() << "234 " << endl;
-    timerThread = new QThread;
+    for(int i=0;i<4;++i){
+        ghost[i] -> outcave_time = 200 + i * 800;
+        ghost_timer[i] = new QTimer(this);
+        connect(ghost_timer[i], &QTimer::timeout, [=](){this -> ghost_handler(i);});
+    }
     pacman_timer = new QTimer(this);
     panic_timer = new QTimer(this);
-    pacman_timer -> moveToThread(timerThread);
-    panic_timer -> moveToThread(timerThread);
-
-    pacman_timer->start(10);
     connect(pacman_timer, &QTimer::timeout, [=](){this -> pacman_handler();});
 
-    timerThread -> start();
+    this -> start();
+
 }
 
+void Game::start(){
+    pacman_timer->start(INTERVAL_pacman);
+    for(int i=0;i<4;++i){
+        ghost_timer[i]->start(INTERVAL_ghost);
+        ghost[i] -> set_curDir(Stop);
+        ghost[i] -> set_nxtDir(Stop);
+    }
+}
 
 void Game::obtain(int x,int y){
     if(map[x][y] == Food){
@@ -136,6 +139,18 @@ void Game::obtain(int x,int y){
             qDebug() << "END PANIC" << endl;
         });
     }
+}
+
+void Game::ghost_handler(int p){
+    if(ghost[p]->outcave_time > 0){
+        ghost[p]->outcave_time = std::max(0,ghost[p]->outcave_time - INTERVAL_ghost);
+        ghost[p] -> curDir = Stop;
+        ghost[p] -> nxtDir = Stop;
+        return ;
+    }
+    qDebug() << ghost[p] -> outcave_time << endl;
+    ghost[p] -> move();
+
 }
 
 void Game::pacman_handler(){
