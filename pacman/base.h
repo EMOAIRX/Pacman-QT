@@ -10,7 +10,7 @@ class Game;
 namespace BaseH{
     enum mapstate{Space=0,Wall=1,Food=2,Medicine=3,Door=4};
     enum pacmanstate{Normal=0,Panic=1};
-    enum ghoststate{Incave=0,Outingcave=1,Outcave=2,Backcave=3};
+    enum ghoststate{Incave=0,Outingcave=1,Outcave=2,Backingcave=3};
     enum dirstate{Left=0,Right=1,Up=2,Down=3,Stop=4};
     extern const int deltax[5];
     extern const int deltay[5];

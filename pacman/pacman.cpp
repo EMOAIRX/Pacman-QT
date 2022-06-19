@@ -15,6 +15,8 @@ Pacman::Pacman(int sx,int sy,Game* father) : Base(IMAGE_INIT)
 {
     game = father;
     nxtDir = Left;
+    state = Normal;
+
     this -> setPos(startX + W*sx,startY+W*sy);
 }
 
@@ -29,6 +31,7 @@ void Pacman::caught(){
 void Pacman::Collision_determination(){
     for(int i=0;i<4;++i){
         if(this -> QGraphicsItem::collidesWithItem(game->ghost[i],Qt::IntersectsItemShape)){
+
             if(this -> state == Normal) this -> caught();
             if(this -> state == Panic) game -> ghost[i] -> caught();
         }
@@ -50,5 +53,6 @@ void Pacman::move(){
     }
     this -> setPos(x()+deltax[curDir],y()+deltay[curDir]);
     this -> Collision_determination();
+//    qDebug() << this -> state << endl;
 //    qDebug() << x() << " " << y() << endl;
 }

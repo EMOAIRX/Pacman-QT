@@ -56,7 +56,7 @@ Ghost::Ghost(int ghid,int sx,int sy,Game* father) : Base(IMAGE_INIT)
 }
 
 void Ghost::caught(){
-    state = Backcave;
+    state = Backingcave;
     this -> setPixmap(run_image);
     //this -> setPos(startX + W*init_posx,startY+W*init_posy);
     //这里需要回到笼子，具体怎么搞之后再说
@@ -107,6 +107,8 @@ void Ghost::move(){
                         }
                     }
                 }
+                qDebug() << id;
+                qDebug() << curDir;
                 break;
             case Incave :
                 curDir = Stop;
@@ -117,9 +119,10 @@ void Ghost::move(){
                     curDir = static_cast<dirstate> (rand() % 4);
                 }
                 break;
-            case Backcave :
+            case Backingcave :
                 if(preX==init_posx && preY==init_posy){
                     state = Incave;
+                    curDir = Stop;
                     this -> setPixmap(IMAGE_INIT);
                     outcave_time = 2000;
                 } else{
@@ -138,6 +141,10 @@ void Ghost::move(){
         }
         //qDebug()<<state<<endl;
     }
+    if(state == Backingcave)
+        qDebug() << "-------------------------------" << endl;
+    if(state == Outingcave) qDebug() << "curDir= " <<  curDir << " " << id << endl;
+    if(state == Outingcave) qDebug() << x() << " " << y() << "->" << x()+deltax[curDir] << y()+deltay[curDir] << endl;
     this -> setPos(x()+deltax[curDir],y()+deltay[curDir]);
 //    qDebug() << x() << " " << y() << endl;
 }//ghost的移动要专门根据策略设置过，这里不清楚怎么搞，或许可以讨论一下
