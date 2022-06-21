@@ -25,6 +25,5 @@
         <file>images/pacman/a1.png</file>
         <file>images/pacman/b1.png</file>
         <file>images/ghost/run.png</file>
-        <file>base.cpp.o13224</file>
     </qresource>
 </RCC>
