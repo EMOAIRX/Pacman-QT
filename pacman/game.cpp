@@ -109,13 +109,17 @@ Game::Game(int WW,int HH,QString map_src) : QGraphicsScene(50,50,WW*20,HH*20)
     connect(powerball_flash_timer, &QTimer::timeout, [=](){this -> powerball_flash();});
     connect(panic_timer, &QTimer::timeout, [=](){this -> panic_handler();});
     powerball_flash_timer->start(INTERVAL_flash);
+    ghost[0] -> strategy = chasing_red(ghost[0],pacman);
+    ghost[1] -> strategy = chasing_pink(ghost[1],pacman);
+    ghost[2] -> strategy = chasing_orange(ghost[2],ghost[0],pacman);
+    ghost[3] -> strategy = chasing_blue(ghost[3],pacman);
     this -> start();
 }
 void Game::panic_handler(){
     int &rtime = pacman ->remain_panic_time;
     int &rrtime = pacman ->remain_panic_flash_time;
     if(rtime == 0) return ;
-    qDebug() << rtime << " " << rrtime << " ";
+   // qDebug() << rtime << " " << rrtime << " ";
     rtime -= INTERVAL_PANIC_FLASH;
     QPixmap normalpng(":/images/pacman/a1.png");
     QPixmap panicpng(":/images/pacman/b1.png");
@@ -206,7 +210,7 @@ void Game::obtain(int x,int y){
 }
 
 void Game::ghost_handler(int p){
-    qDebug() << p << " " << ghost[p]->outcave_time << " " << ghost[p] ->state << endl;
+   // qDebug() << p << " " << ghost[p]->outcave_time << " " << ghost[p] ->state << endl;
     if(ghost[p]->outcave_time > 0){
         ghost[p] -> outcave_time -= INTERVAL_ghost;
         if(ghost[p] -> outcave_time <= 0){

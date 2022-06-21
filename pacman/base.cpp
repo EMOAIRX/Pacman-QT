@@ -7,7 +7,7 @@ int BaseH::startX,BaseH::startY;
 int BaseH::map[35][35];
 int BaseH::doorx,BaseH::doory;
 const int BaseH::INTERVAL_ghost=10;
-const int BaseH::INTERVAL_pacman=6;
+const int BaseH::INTERVAL_pacman=9;
 const int BaseH::INTERVAL_flash = 250;
 const int BaseH::score_food = 10;
 const int BaseH::score_medicine = 20;
@@ -33,6 +33,17 @@ void Base::set_nxtDir(dirstate dir){
 }
 void Base::set_curDir(dirstate dir){
     curDir = dir;
+}
+
+int Base::get_x() const{
+    return preX;
+}
+int Base::get_y() const{
+    return preY;
+}
+
+dirstate Base::get_curDir(){
+    return curDir;
 }
 
 mapstate Base::nxt(int x,int y,dirstate dir){

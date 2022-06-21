@@ -6,7 +6,10 @@
 #include <QGraphicsItem>
 #include <QTimer>
 #include <QVector>
+#include <functional>
 class Game;
+class Ghost;
+class Pacman;
 namespace BaseH{
     enum mapstate{Space=0,Wall=1,Food=2,Medicine=3,Door=4};
     enum pacmanstate{Normal=0,Panic=1};
@@ -36,7 +39,14 @@ public:
     static BaseH::mapstate nxt(int,int,BaseH::dirstate);
     static BaseH::mapstate nxt(int,int,int);
     bool canmove(int,int,BaseH::dirstate);
+    BaseH::dirstate get_curDir();
+    int get_x() const;
+    int get_y() const;
     //virtual void move();
+    friend std::function<BaseH::dirstate()> chasing_red(Ghost*,Pacman*);
+    friend std::function<BaseH::dirstate()> chasing_pink(Ghost*,Pacman*);
+    friend std::function<BaseH::dirstate()> chasing_orange(Ghost*,Pacman*);
+    friend std::function<BaseH::dirstate()> chasing_blue(Ghost*,Pacman*);
 
 protected:
     BaseH::dirstate curDir,nxtDir;

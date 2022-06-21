@@ -1,6 +1,7 @@
 #ifndef PACMAN_H
 #define PACMAN_H
 #include "base.h"
+#include <functional>
 
 class Pacman : public Base
 {
@@ -13,6 +14,7 @@ public:
     void caught();
     friend class Game;
 private:
+
     QTimer* pacnic_flash;
     int remain_panic_time,remain_panic_flash_time;
     Game* game;

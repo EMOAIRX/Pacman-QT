@@ -9,6 +9,7 @@
 #include "ghost.h"
 #include "base.h"
 
+
 class Game : public QGraphicsScene
 {
     Q_OBJECT

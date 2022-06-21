@@ -119,10 +119,11 @@ void Ghost::move(){
                 curDir = Stop;
                 break;
             case Outcave :
-                curDir = static_cast<dirstate> (rand() % 4);
-                while(!canmove(preX,preY,curDir)){
-                    curDir = static_cast<dirstate> (rand() % 4);
-                }
+                curDir = this->strategy();
+//                curDir = static_cast<dirstate> (rand() % 4);
+  //              while(!canmove(preX,preY,curDir)){
+    //                curDir = static_cast<dirstate> (rand() % 4);
+      //          }
                 break;
             case Backingcave :
                 if(preX==init_posx && preY==init_posy){

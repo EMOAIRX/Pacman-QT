@@ -17,7 +17,8 @@ SOURCES += main.cpp\
     base.cpp \
     pacman.cpp \
     game.cpp \
-    ghost.cpp
+    ghost.cpp \
+    ghost_strategies.cpp
 
 HEADERS  += mainwindow.h \
     base.h \

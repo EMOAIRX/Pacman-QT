@@ -1,7 +1,12 @@
 #ifndef GHOST_H
 #define GHOST_H
 #include "base.h"
+#include <functional>
 
+std::function<BaseH::dirstate()> chasing_red(Ghost*,Pacman*);
+std::function<BaseH::dirstate()> chasing_pink(Ghost*,Pacman*);
+std::function<BaseH::dirstate()> chasing_orange(Ghost*,Ghost*,Pacman*);
+std::function<BaseH::dirstate()> chasing_blue(Ghost*,Pacman*);
 
 class Ghost : public Base
 {
@@ -16,6 +21,7 @@ public:
     friend class Game;
 private:
     bool canmove(int, int, BaseH::dirstate);
+    std::function<BaseH::dirstate()> strategy;
     Game* game;
     int id;
     BaseH::ghoststate state;
