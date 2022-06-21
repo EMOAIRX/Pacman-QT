@@ -12,7 +12,7 @@ namespace BaseH{
     enum pacmanstate{Normal=0,Panic=1};
     enum ghoststate{Incave=0,Outingcave=1,Outcave=2,Backingcave=3};
     enum dirstate{Left=0,Right=1,Up=2,Down=3,Stop=4};
-    enum stat{Start=0,Over=1};
+    enum stat{Start=0,Over=1,Pause=2};
     extern const int deltax[5];
     extern const int deltay[5];
     extern int Width,Height,ObjectWidth;

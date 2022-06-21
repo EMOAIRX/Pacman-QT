@@ -10,6 +10,7 @@
 #include <QFile>
 using namespace BaseH;
 
+#define INTERVAL_PANIC_FLASH 20
 
 Game::Game(int WW,int HH,QString map_src) : QGraphicsScene(50,50,WW*20,HH*20)
 {
@@ -93,9 +94,6 @@ Game::Game(int WW,int HH,QString map_src) : QGraphicsScene(50,50,WW*20,HH*20)
     for (int i = 0; i < num_ghost; i++)
         addItem(ghost[i]);
 
-    //pacman = new Pacman(1,1);//设置初始位置
-    //addItem(pacman);
-
     qDebug() << "234 " << endl;
     for(int i=0;i<4;++i){
         ghost[i] -> get_dis_map();
@@ -105,19 +103,46 @@ Game::Game(int WW,int HH,QString map_src) : QGraphicsScene(50,50,WW*20,HH*20)
     }
     pacman_timer = new QTimer(this);
     panic_timer = new QTimer(this);
+    panic_flash_tick = 1;
     connect(pacman_timer, &QTimer::timeout, [=](){this -> pacman_handler();});
+    powerball_flash_timer = new QTimer(this);
+    connect(powerball_flash_timer, &QTimer::timeout, [=](){this -> powerball_flash();});
+    connect(panic_timer, &QTimer::timeout, [=](){this -> panic_handler();});
 
     this -> start();
-
 }
+void Game::panic_handler(){
+    int &rtime = pacman ->remain_panic_time;
+    int &rrtime = pacman ->remain_panic_flash_time;
+    if(rtime == 0) return ;
+    qDebug() << rtime << " " << rrtime << " ";
+    rtime -= INTERVAL_PANIC_FLASH;
+    QPixmap normalpng(":/images/pacman/a1.png");
+    QPixmap panicpng(":/images/pacman/b1.png");
+    if(rtime <= 0){
+        rtime = 0;
+        pacman -> state = Normal;
+        pacman -> setPixmap(normalpng);
+        pacman -> show();
+        panic_flash_tick = 1;
+        return ;
+    }
+    rrtime -= INTERVAL_PANIC_FLASH;
+    if(rrtime <= 0){
+        rrtime = std::max(10,rtime / 10);
+        if(panic_flash_tick == 1)
+            pacman -> setPixmap(normalpng),panic_flash_tick = 0;
+        else
+            pacman -> setPixmap(panicpng),panic_flash_tick = 1;
+    }
+}
+
 
 void Game::start(){
     stat = Start;
-    powerball_flash_timer = new QTimer(this);
-    connect(powerball_flash_timer, &QTimer::timeout, [=](){this -> powerball_flash();});
     powerball_flash_timer->start(INTERVAL_flash);
-
-    pacman_timer->start(INTERVAL_pacman);
+    panic_timer -> start(INTERVAL_PANIC_FLASH);
+    pacman_timer-> start(INTERVAL_pacman);
     for(int i=0;i<4;++i){
         ghost_timer[i]->start(INTERVAL_ghost);
         ghost[i] -> state = Incave;
@@ -132,6 +157,18 @@ void Game::over(){
     for(int i=0;i<4;++i) ghost_timer[i]->stop();
     panic_timer -> stop();
     stat = Over;
+}
+
+
+void Game::pause(){
+    if(stat == Start){
+        stat = Pause;
+        Game::over();
+    } else{
+        stat = Start;
+        Game::start();
+        panic_timer->start(INTERVAL_PANIC_FLASH);
+    }
 }
 
 
@@ -159,18 +196,14 @@ void Game::obtain(int x,int y){
         pacman -> setPixmap(panicpng);
         pacman -> state = Panic;
         //qDebug() << "START PANIC" << endl;
-        panic_timer -> start(9000);
-        connect(panic_timer, &QTimer::timeout, [=](){
-            pacman -> state = Normal;
-            panic_timer -> stop();
-            pacman -> setPixmap(normalpng);
-            //qDebug() << "END PANIC" << endl;
-        });
+
+        pacman->remain_panic_time=9000;
+        pacman->remain_panic_flash_time=5000;
     }
 }
 
 void Game::ghost_handler(int p){
-//    qDebug() << p << " " << ghost[p]->outcave_time << " " << ghost[p] ->state << endl;
+    qDebug() << p << " " << ghost[p]->outcave_time << " " << ghost[p] ->state << endl;
     if(ghost[p]->outcave_time > 0){
         ghost[p] -> outcave_time -= INTERVAL_ghost;
         if(ghost[p] -> outcave_time <= 0){
@@ -201,6 +234,7 @@ void Game::newpress(Qt::Key key){
     case Qt::Key_Down : pacman -> set_nxtDir(Down); break;
     case Qt::Key_Left : pacman -> set_nxtDir(Left); break;
     case Qt::Key_Right : pacman -> set_nxtDir(Right); break;
+    case Qt::Key_Space : this -> pause(); break;
         default: break;
     }
     //qDebug() << pacman_timer -> timeout() << endl;

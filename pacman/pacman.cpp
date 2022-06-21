@@ -16,6 +16,7 @@ Pacman::Pacman(int sx,int sy,Game* father) : Base(IMAGE_INIT)
     game = father;
     nxtDir = Left;
     state = Normal;
+    remain_panic_time = 0;
 
     this -> setPos(startX + W*sx,startY+W*sy);
 }

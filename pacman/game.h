@@ -29,6 +29,7 @@ public:
     void obtain(int x,int y);
     void start();
     void over();
+    void pause();
 
     int Score;
     int flash_tick;
@@ -37,6 +38,10 @@ public:
 private:
     void pacman_handler();
     void ghost_handler(int);
+
+    void panic_handler();
+    int panic_flash_tick;
+
     void powerball_flash();
 };
 
