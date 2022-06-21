@@ -78,7 +78,7 @@ Game::Game(int WW,int HH,QString map_src) : QGraphicsScene(50,50,WW*20,HH*20)
                     break;
                 case 'g':
                     ghost[num_ghost] = new Ghost(num_ghost,j,i,num_ghost+1,this);
-                    addItem(ghost[num_ghost]);
+                    //addItem(ghost[num_ghost]);
                     num_ghost++;
 
                     map[j][i] = Space;
@@ -90,7 +90,8 @@ Game::Game(int WW,int HH,QString map_src) : QGraphicsScene(50,50,WW*20,HH*20)
             addItem(uimap[j][i]);
         }
     }
-
+    for (int i = 0; i < num_ghost; i++)
+        addItem(ghost[i]);
 
     //pacman = new Pacman(1,1);//设置初始位置
     //addItem(pacman);
