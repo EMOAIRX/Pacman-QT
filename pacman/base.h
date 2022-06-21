@@ -42,6 +42,8 @@ public:
     BaseH::dirstate get_curDir();
     int get_x() const;
     int get_y() const;
+    void reposition();
+
     //virtual void move();
     friend std::function<BaseH::dirstate()> chasing_red(Ghost*,Pacman*);
     friend std::function<BaseH::dirstate()> chasing_pink(Ghost*,Pacman*);
@@ -50,6 +52,7 @@ public:
 
 protected:
     BaseH::dirstate curDir,nxtDir;
+    int init_posx,init_posy;
     int preX,preY;//表示之前在地图中具体的位置
 };
 

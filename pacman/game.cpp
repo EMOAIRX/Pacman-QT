@@ -97,7 +97,6 @@ Game::Game(int WW,int HH,QString map_src) : QGraphicsScene(50,50,WW*20,HH*20)
     qDebug() << "234 " << endl;
     for(int i=0;i<4;++i){
         ghost[i] -> get_dis_map();
-        ghost[i] -> outcave_time = 200 + i * 800;
         ghost_timer[i] = new QTimer(this);
         connect(ghost_timer[i], &QTimer::timeout, [=](){this -> ghost_handler(i);});
     }
@@ -143,22 +142,32 @@ void Game::panic_handler(){
 
 
 void Game::start(){
+    pacman->remain_panic_flash_time=0;
+    pacman->remain_panic_time=0;
+    pacman->reposition();//(startX+W*pacman->init_posx,startY+pacman->init_posy);
+    pacman->set_curDir(Left);
+    pacman->set_nxtDir(Left);
     stat = Start;
     panic_timer -> start(INTERVAL_PANIC_FLASH);
     pacman_timer-> start(INTERVAL_pacman);
     for(int i=0;i<4;++i){
         ghost_timer[i]->start(INTERVAL_ghost);
+        ghost[i] -> outcave_time = 200 + i * 800;
         ghost[i] -> state = Incave;
+        ghost[i] -> reposition();
         ghost[i] -> set_curDir(Stop);
         ghost[i] -> set_nxtDir(Stop);
     }
 }
 
 void Game::over(){
-    pacman_timer->stop();
-    for(int i=0;i<4;++i) ghost_timer[i]->stop();
-    panic_timer -> stop();
-    stat = Over;
+    //pacman_timer->stop();
+    //for(int i=0;i<4;++i) ghost_timer[i]->stop();
+    //panic_timer -> stop();
+    //stat = Over;
+
+    start();
+    Score -= 800;
 }
 
 

@@ -13,6 +13,8 @@ Pacman::~Pacman(){
 
 Pacman::Pacman(int sx,int sy,Game* father) : Base(IMAGE_INIT)
 {
+    init_posx = sx;
+    init_posy = sy;
     game = father;
     nxtDir = Left;
     state = Normal;
@@ -27,6 +29,10 @@ void Pacman::obtain(int x,int y){
 
 void Pacman::caught(){
     game -> over();
+}
+
+pacmanstate Pacman::get_state() const{
+    return state;
 }
 
 void Pacman::Collision_determination(){

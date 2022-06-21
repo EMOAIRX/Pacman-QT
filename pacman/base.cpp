@@ -34,6 +34,9 @@ void Base::set_nxtDir(dirstate dir){
 void Base::set_curDir(dirstate dir){
     curDir = dir;
 }
+void Base::reposition(){
+    this->setPos(startX+ObjectWidth*init_posx,startY+ObjectWidth*init_posy);
+}
 
 int Base::get_x() const{
     return preX;

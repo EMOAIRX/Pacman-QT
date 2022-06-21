@@ -12,9 +12,9 @@ public:
     void move();
     void Collision_determination();
     void caught();
+    BaseH::pacmanstate get_state() const;
     friend class Game;
 private:
-
     QTimer* pacnic_flash;
     int remain_panic_time,remain_panic_flash_time;
     Game* game;
