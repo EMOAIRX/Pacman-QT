@@ -108,7 +108,7 @@ Game::Game(int WW,int HH,QString map_src) : QGraphicsScene(50,50,WW*20,HH*20)
     powerball_flash_timer = new QTimer(this);
     connect(powerball_flash_timer, &QTimer::timeout, [=](){this -> powerball_flash();});
     connect(panic_timer, &QTimer::timeout, [=](){this -> panic_handler();});
-
+    powerball_flash_timer->start(INTERVAL_flash);
     this -> start();
 }
 void Game::panic_handler(){
@@ -140,7 +140,6 @@ void Game::panic_handler(){
 
 void Game::start(){
     stat = Start;
-    powerball_flash_timer->start(INTERVAL_flash);
     panic_timer -> start(INTERVAL_PANIC_FLASH);
     pacman_timer-> start(INTERVAL_pacman);
     for(int i=0;i<4;++i){
@@ -152,7 +151,6 @@ void Game::start(){
 }
 
 void Game::over(){
-    powerball_flash_timer->stop();
     pacman_timer->stop();
     for(int i=0;i<4;++i) ghost_timer[i]->stop();
     panic_timer -> stop();
@@ -161,12 +159,17 @@ void Game::over(){
 
 
 void Game::pause(){
+    if(stat == Over) return ;
     if(stat == Start){
         stat = Pause;
-        Game::over();
+        pacman_timer->stop();
+        for(int i=0;i<4;++i) ghost_timer[i]->stop();
+        panic_timer -> stop();
     } else{
         stat = Start;
-        Game::start();
+        pacman_timer-> start(INTERVAL_pacman);
+        for(int i=0;i<4;++i)
+            ghost_timer[i]->start(INTERVAL_ghost);
         panic_timer->start(INTERVAL_PANIC_FLASH);
     }
 }

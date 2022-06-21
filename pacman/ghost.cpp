@@ -146,10 +146,10 @@ void Ghost::move(){
         }
         //qDebug()<<state<<endl;
     }
-    if(state == Backingcave)
+    //if(state == Backingcave)
   //      qDebug() << "-------------------------------" << endl;
     //if(state == Outingcave) qDebug() << "curDir= " <<  curDir << " " << id << endl;
-    if(state == Outingcave) qDebug() << x() << " " << y() << "->" << x()+deltax[curDir] << y()+deltay[curDir] << endl;
+    //if(state == Outingcave) qDebug() << x() << " " << y() << "->" << x()+deltax[curDir] << y()+deltay[curDir] << endl;
     this -> setPos(x()+deltax[curDir],y()+deltay[curDir]);
 //    qDebug() << x() << " " << y() << endl;
 }//ghost的移动要专门根据策略设置过，这里不清楚怎么搞，或许可以讨论一下
