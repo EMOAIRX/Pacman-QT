@@ -4,6 +4,7 @@
 #include <QGraphicsView>
 #include <QGraphicsScene>
 #include <QGraphicsItem>
+#include <QVector>
 #include "pacman.h"
 #include "ghost.h"
 #include "base.h"
@@ -19,17 +20,24 @@ public:
     Ghost* ghost[4];
     QTimer* pacman_timer;
     QTimer* panic_timer,*ghost_timer[4];//Invincible time after taking drugs
+    QTimer *powerball_flash_timer;//frequence of the ball flash
     QThread* timerThread;
     Base*** uimap;
+    QVector<Base*> powerball;
+    BaseH::stat stat;
     void newpress(Qt::Key);
     void obtain(int x,int y);
     void start();
     void over();
+
+    int Score;
+    int flash_tick;
     friend class Pacman;
     friend class Ghost;
 private:
     void pacman_handler();
     void ghost_handler(int);
+    void powerball_flash();
 };
 
 

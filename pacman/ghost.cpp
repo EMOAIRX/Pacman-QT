@@ -45,7 +45,7 @@ void Ghost::get_dis_map(){
 #undef se
 }
 
-Ghost::Ghost(int ghid,int sx,int sy,Game* father) : Base(IMAGE_INIT)
+Ghost::Ghost(int ghid,int sx,int sy,int numb,Game* father) : Base(IMAGE_INIT,numb*100)
 {
     init_posx = sx;
     init_posy = sy;
@@ -54,8 +54,13 @@ Ghost::Ghost(int ghid,int sx,int sy,Game* father) : Base(IMAGE_INIT)
     this -> setPos(startX + W*sx,startY+W*sy);
     curDir = nxtDir = Stop;
 }
+BaseH::ghoststate Ghost::get_state()
+{
+    return state;
+}
 
 void Ghost::caught(){
+    if (state!=Outcave) return;
     state = Backingcave;
     this -> setPixmap(run_image);
     //this -> setPos(startX + W*init_posx,startY+W*init_posy);
@@ -82,7 +87,7 @@ void Ghost::move(){
         switch (state)
         {
             case Outingcave:
-                qDebug()<<"1234"<<endl;
+                //qDebug()<<"1234"<<endl;
                 if (map[preX][preY] == Door)
                 {
                     state = Outcave;
@@ -107,8 +112,8 @@ void Ghost::move(){
                         }
                     }
                 }
-                qDebug() << id;
-                qDebug() << curDir;
+                //qDebug() << id;
+                //qDebug() << curDir;
                 break;
             case Incave :
                 curDir = Stop;
@@ -143,8 +148,8 @@ void Ghost::move(){
     }
     if(state == Backingcave)
         qDebug() << "-------------------------------" << endl;
-    if(state == Outingcave) qDebug() << "curDir= " <<  curDir << " " << id << endl;
-    if(state == Outingcave) qDebug() << x() << " " << y() << "->" << x()+deltax[curDir] << y()+deltay[curDir] << endl;
+    //if(state == Outingcave) qDebug() << "curDir= " <<  curDir << " " << id << endl;
+    //if(state == Outingcave) qDebug() << x() << " " << y() << "->" << x()+deltax[curDir] << y()+deltay[curDir] << endl;
     this -> setPos(x()+deltax[curDir],y()+deltay[curDir]);
 //    qDebug() << x() << " " << y() << endl;
 }//ghost的移动要专门根据策略设置过，这里不清楚怎么搞，或许可以讨论一下

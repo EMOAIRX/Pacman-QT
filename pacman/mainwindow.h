@@ -2,6 +2,8 @@
 #define MAINWINDOW_H
 
 #include <QMainWindow>
+#include <QTimer>
+#include <QLabel>
 #include <game.h>
 
 namespace Ui {
@@ -19,7 +21,11 @@ public:
 
 private:
     Ui::MainWindow *ui;
-    Game* game;
+    Game *game;
+    QLabel *score,*score_title;
+    QTimer *score_timer;
+    void InitLabels();
+    void update_score();
 
 protected:
     void keyPressEvent(QKeyEvent *);

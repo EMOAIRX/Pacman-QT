@@ -49,23 +49,24 @@ Game::Game(int WW,int HH,QString map_src) : QGraphicsScene(50,50,WW*20,HH*20)
             switch (line[j]) {
                 case '0':
                     map[j][i] = Space;
-                    uimap[j][i] = new Base(blankpng);
+                    uimap[j][i] = new Base(blankpng,0);
                     break;
                 case '1':
                     map[j][i] = Wall;
-                    uimap[j][i] = new Base(wallpng);
+                    uimap[j][i] = new Base(wallpng,0);
                     break;
                 case '2':
                     map[j][i] = Food;
-                    uimap[j][i] = new Base(foodpng);
+                    uimap[j][i] = new Base(foodpng,score_food);
                     break;
                 case '3':
                     map[j][i] = Medicine;
-                    uimap[j][i] = new Base(medicinepng);
+                    uimap[j][i] = new Base(medicinepng,score_medicine);
+                    powerball.push_back(uimap[j][i]);
                     break;
                 case '4':
                     map[j][i] = Door;
-                    uimap[j][i] = new Base(gatepng);
+                    uimap[j][i] = new Base(gatepng,0);
                     doorx=j,doory=i;
                     break;
                 case 'p':
@@ -76,7 +77,7 @@ Game::Game(int WW,int HH,QString map_src) : QGraphicsScene(50,50,WW*20,HH*20)
                     uimap[j][i] = new Base(blankpng);
                     break;
                 case 'g':
-                    ghost[num_ghost] = new Ghost(num_ghost,j,i,this);
+                    ghost[num_ghost] = new Ghost(num_ghost,j,i,num_ghost+1,this);
                     addItem(ghost[num_ghost]);
                     num_ghost++;
 
@@ -110,6 +111,11 @@ Game::Game(int WW,int HH,QString map_src) : QGraphicsScene(50,50,WW*20,HH*20)
 }
 
 void Game::start(){
+    stat = Start;
+    powerball_flash_timer = new QTimer(this);
+    connect(powerball_flash_timer, &QTimer::timeout, [=](){this -> powerball_flash();});
+    powerball_flash_timer->start(INTERVAL_flash);
+
     pacman_timer->start(INTERVAL_pacman);
     for(int i=0;i<4;++i){
         ghost_timer[i]->start(INTERVAL_ghost);
@@ -120,36 +126,44 @@ void Game::start(){
 }
 
 void Game::over(){
+    powerball_flash_timer->stop();
     pacman_timer->stop();
     for(int i=0;i<4;++i) ghost_timer[i]->stop();
     panic_timer -> stop();
+    stat = Over;
 }
 
 
 void Game::obtain(int x,int y){
     if(map[x][y] == Food){
         map[x][y] = Space;
-
         QPixmap blankpng;
         uimap[x][y] ->setPixmap(blankpng);
+        Score+=uimap[x][y]->score;
     }
 
     if(map[x][y] == Medicine){
         map[x][y] = Space;
+        Score+=uimap[x][y]->score;
         QPixmap blankpng;
+        for (int i = 0; i < this->powerball.size(); i++) {
+            if (this->powerball.at(i) == uimap[x][y]) {
+                this->powerball.remove(i);
+                break;
+            }
+        }
         uimap[x][y] ->setPixmap(blankpng);
-
         QPixmap normalpng(":/images/pacman/a1.png");
         QPixmap panicpng(":/images/pacman/b1.png");
         pacman -> setPixmap(panicpng);
         pacman -> state = Panic;
-        qDebug() << "START PANIC" << endl;
+        //qDebug() << "START PANIC" << endl;
         panic_timer -> start(9000);
         connect(panic_timer, &QTimer::timeout, [=](){
             pacman -> state = Normal;
             panic_timer -> stop();
             pacman -> setPixmap(normalpng);
-            qDebug() << "END PANIC" << endl;
+            //qDebug() << "END PANIC" << endl;
         });
     }
 }
@@ -190,6 +204,27 @@ void Game::newpress(Qt::Key key){
     }
     //qDebug() << pacman_timer -> timeout() << endl;
 }
+
+void Game::powerball_flash()
+{
+    if (powerball.empty()) {
+        powerball_flash_timer->stop();
+        return;
+    }
+    qDebug()<<"hhh "<<flash_tick<<endl;
+    if (flash_tick==2) {
+        for (int i = 0; i < powerball.size(); i++) {
+            powerball.at(i)->hide();
+        }
+        flash_tick = 0;
+    } else {
+        for (int i = 0; i < powerball.size(); i++) {
+            powerball.at(i)->show();
+        }
+        flash_tick++;
+    }
+}
+
 Game::~Game()
 {
     //Do Nothing

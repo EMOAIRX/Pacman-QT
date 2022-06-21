@@ -31,9 +31,13 @@ void Pacman::caught(){
 void Pacman::Collision_determination(){
     for(int i=0;i<4;++i){
         if(this -> QGraphicsItem::collidesWithItem(game->ghost[i],Qt::IntersectsItemShape)){
-
+            if (game->ghost[i]->get_state()!=Outcave) continue;
             if(this -> state == Normal) this -> caught();
-            if(this -> state == Panic) game -> ghost[i] -> caught();
+            if(this -> state == Panic)
+            {
+                game -> ghost[i] -> caught();
+                game -> Score += game -> ghost[i] -> score;
+            }
         }
     }
 }

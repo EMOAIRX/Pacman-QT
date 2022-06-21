@@ -7,11 +7,12 @@ class Ghost : public Base
 {
 public:
 //    Ghost();
-    Ghost(int,int,int,Game*);
+    Ghost(int,int,int,int,Game*);
 //    ~Ghost();
     void obtain(int,int);
     void move();
     void caught();
+    BaseH::ghoststate get_state();
     friend class Game;
 private:
     bool canmove(int, int, BaseH::dirstate);
