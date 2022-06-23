@@ -25,6 +25,8 @@ namespace BaseH{
     extern int doorx,doory;
     extern const int INTERVAL_flash;
     extern const int score_food,score_medicine;
+    //extern QPixmap blue_ghost,orange_ghost,pink_ghost,red_ghost;
+    //extern QPixmap blankpng,wallpng,foodpng,medicinepng,gatepng;
 }
 
 class Base:public QGraphicsPixmapItem

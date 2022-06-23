@@ -5,6 +5,11 @@ using namespace BaseH;
 #define W ObjectWidth
 #define IMAGE_INIT QPixmap(":/images/ghost/bl1.png")
 #define run_image QPixmap(":/images/ghost/run.png")
+
+#define orange_ghost QPixmap(":/images/ghost/orange.png/");
+#define red_ghost QPixmap(":/images/ghost/red.png");
+#define blue_ghost QPixmap(":/images/ghost/blue.png");
+#define pink_ghost QPixmap(":/images/ghost/pink.png");
 //Ghost::Ghost(){
 
 //}
@@ -47,6 +52,12 @@ void Ghost::get_dis_map(){
 
 Ghost::Ghost(int ghid,int sx,int sy,int numb,Game* father) : Base(IMAGE_INIT,numb*100)
 {
+    //img(IMAGE_INIT);
+    if (numb == 1) img=red_ghost;
+    if (numb == 2) img=pink_ghost;
+    if (numb == 3) img=orange_ghost;
+    if (numb == 4) img=blue_ghost;
+    setPixmap(img);
     init_posx = sx;
     init_posy = sy;
     id = ghid;
@@ -129,7 +140,7 @@ void Ghost::move(){
                 if(preX==init_posx && preY==init_posy){
                     state = Incave;
                     curDir = Stop;
-                    this -> setPixmap(IMAGE_INIT);
+                    this -> setPixmap(img);
                     outcave_time = 2000;
                 } else{
                     curDir = Stop;

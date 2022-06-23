@@ -1,6 +1,19 @@
 <RCC>
     <qresource prefix="/">
+        <file>images/ghost/bl1.png</file>
+        <file>images/ghost/blue.png</file>
+        <file>images/ghost/orange.png</file>
+        <file>images/ghost/pink.png</file>
+        <file>images/ghost/red.png</file>
+        <file>images/ghost/run.png</file>
+        <file>images/pacman/a1.png</file>
+        <file>images/pacman/b1.png</file>
+        <file>images/dot.png</file>
+        <file>images/dotb.png</file>
+        <file>images/gate.png</file>
+        <file>images/power_ball.png</file>
         <file>images/tmp.png</file>
+        <file>images/wall.png</file>
         <file>map/map1.txt</file>
         <file>base.cpp</file>
         <file>base.h</file>
@@ -8,6 +21,10 @@
         <file>game.h</file>
         <file>ghost.cpp</file>
         <file>ghost.h</file>
+        <file>ghost_strategies.cpp</file>
+        <file>ghost_strategies.h</file>
+        <file>ghost_strategy.cpp</file>
+        <file>ghost_strategy.h</file>
         <file>main.cpp</file>
         <file>mainwindow.cpp</file>
         <file>mainwindow.h</file>
@@ -16,14 +33,5 @@
         <file>pacman.h</file>
         <file>pacman.pro</file>
         <file>res.qrc</file>
-        <file>images/dot.png</file>
-        <file>images/dotb.png</file>
-        <file>images/gate.png</file>
-        <file>images/power_ball.png</file>
-        <file>images/wall.png</file>
-        <file>images/ghost/bl1.png</file>
-        <file>images/pacman/a1.png</file>
-        <file>images/pacman/b1.png</file>
-        <file>images/ghost/run.png</file>
     </qresource>
 </RCC>

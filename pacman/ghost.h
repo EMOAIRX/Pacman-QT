@@ -24,6 +24,7 @@ private:
     std::function<BaseH::dirstate()> strategy;
     Game* game;
     int id;
+    QPixmap img;
     BaseH::ghoststate state;
     int outcave_time;
     int dis_map[35][35];

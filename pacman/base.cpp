@@ -1,4 +1,4 @@
-#include "base.h"
+ #include "base.h"
 
 const int BaseH::deltax[5] = {-1,1,0,0,0};
 const int BaseH::deltay[5] = {0,0,-1,1,0};
@@ -11,6 +11,7 @@ const int BaseH::INTERVAL_pacman=9;
 const int BaseH::INTERVAL_flash = 250;
 const int BaseH::score_food = 10;
 const int BaseH::score_medicine = 20;
+
 
 using namespace BaseH;
 

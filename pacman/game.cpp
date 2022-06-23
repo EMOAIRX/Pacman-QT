@@ -14,6 +14,7 @@ using namespace BaseH;
 
 Game::Game(int WW,int HH,QString map_src) : QGraphicsScene(50,50,WW*20,HH*20)
 {
+    Score = 0;
     startX = 50;
     startY = 50;
     ObjectWidth = 20;
@@ -79,6 +80,7 @@ Game::Game(int WW,int HH,QString map_src) : QGraphicsScene(50,50,WW*20,HH*20)
                     break;
                 case 'g':
                     ghost[num_ghost] = new Ghost(num_ghost,j,i,num_ghost+1,this);
+                    ghost[num_ghost] = new Ghost(num_ghost,j,i,num_ghost+1,this);
                     //addItem(ghost[num_ghost]);
                     num_ghost++;
 
@@ -93,7 +95,6 @@ Game::Game(int WW,int HH,QString map_src) : QGraphicsScene(50,50,WW*20,HH*20)
     }
     for (int i = 0; i < num_ghost; i++)
         addItem(ghost[i]);
-
     qDebug() << "234 " << endl;
     for(int i=0;i<4;++i){
         ghost[i] -> get_dis_map();
@@ -108,10 +109,14 @@ Game::Game(int WW,int HH,QString map_src) : QGraphicsScene(50,50,WW*20,HH*20)
     connect(powerball_flash_timer, &QTimer::timeout, [=](){this -> powerball_flash();});
     connect(panic_timer, &QTimer::timeout, [=](){this -> panic_handler();});
     powerball_flash_timer->start(INTERVAL_flash);
+    //ghost[0] -> setPixmap(orange_ghost);
     ghost[0] -> strategy = chasing_red(ghost[0],pacman);
     ghost[1] -> strategy = chasing_pink(ghost[1],pacman);
     ghost[2] -> strategy = chasing_orange(ghost[2],ghost[0],pacman);
     ghost[3] -> strategy = chasing_blue(ghost[3],pacman);
+
+
+
     this -> start();
 }
 void Game::panic_handler(){
