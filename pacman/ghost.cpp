@@ -81,6 +81,7 @@ void Ghost::caught(){
 bool Ghost::canmove(int x,int y,dirstate dir){
     auto val = Base::nxt(x,y,dir);
     if (val == Wall) return false;
+    if (val == Portal) return false;
     if (val == Door && state==Outcave) return false;
     if (val == Door && state==Incave && outcave_time>0) return false;
     return true;

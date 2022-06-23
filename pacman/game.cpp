@@ -87,10 +87,22 @@ Game::Game(int WW,int HH,QString map_src) : QGraphicsScene(50,50,WW*20,HH*20)
                     map[j][i] = Space;
                     uimap[j][i] = new Base(blankpng);
                     break;
-
+                case 'L':
+                    this -> Lposx = j;
+                    this -> Lposy = i;
+                    map[j][i] = Portal;
+                    uimap[j][i] = new Base(blankpng,0);
+                    break;
+                case 'R':
+                    this -> Rposx = j;
+                    this -> Rposy = i;
+                    map[j][i] = Portal;
+                    uimap[j][i] = new Base(blankpng,0);
+                    break;
             }
             uimap[j][i]->setPos(x,y);
             addItem(uimap[j][i]);
+            qDebug() << i << " " << j << endl;
         }
     }
     for (int i = 0; i < num_ghost; i++)
@@ -218,8 +230,8 @@ void Game::obtain(int x,int y){
         pacman -> state = Panic;
         //qDebug() << "START PANIC" << endl;
 
-        pacman->remain_panic_time=9000;
-        pacman->remain_panic_flash_time=5000;
+        pacman->remain_panic_time=5000;
+        pacman->remain_panic_flash_time=2000;
     }
 }
 

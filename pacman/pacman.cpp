@@ -61,7 +61,17 @@ void Pacman::move(){
         if(canmove(preX,preY,nxtDir)) curDir = nxtDir;
         if(!canmove(preX,preY,curDir)) curDir = Stop;
         nxtDir = curDir;//这里手感好像不太好，写完可以微调一下
+
+
+        if(preX == game -> Lposx && preY == game -> Lposy && curDir != Right)
+            this -> setPos(startX + W*game->Rposx,startY+W*game->Rposy);
+        if(preX == game -> Rposx && preY == game -> Rposy && curDir != Left)
+            this -> setPos(startX + W*game->Lposx,startY+W*game->Lposy);
     }
+    //会不会有bug啊，就是在中间的时候暂停一下——
+//    if(preX==game->Lposx&&preY==game->Lposy)
+//       qDebug() << "???" << curDir << endl;
+
     this -> setPos(x()+deltax[curDir],y()+deltay[curDir]);
     this -> Collision_determination();
 //    qDebug() << this -> state << endl;

@@ -37,6 +37,7 @@ public:
     friend class Pacman;
     friend class Ghost;
 private:
+    int Lposx,Lposy,Rposx,Rposy;
     void pacman_handler();
     void ghost_handler(int);
 
