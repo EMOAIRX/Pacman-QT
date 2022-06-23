@@ -39,6 +39,8 @@ Game::Game(int WW,int HH,QString map_src) : QGraphicsScene(50,50,WW*20,HH*20)
     QPixmap foodpng(":/images/dot.png");
     QPixmap medicinepng(":/images/power_ball.png");
     QPixmap gatepng(":/images/gate.png");//这个是不是变成全局变量更好一点
+    remain_food = 0;
+    remain_medicine = 0;
     qDebug() << "244" << endl;
     static int num_ghost = 0;
     for (int i=0;i<Height;i++)
@@ -60,11 +62,13 @@ Game::Game(int WW,int HH,QString map_src) : QGraphicsScene(50,50,WW*20,HH*20)
                 case '2':
                     map[j][i] = Food;
                     uimap[j][i] = new Base(foodpng,score_food);
+                    remain_food += 1;
                     break;
                 case '3':
                     map[j][i] = Medicine;
                     uimap[j][i] = new Base(medicinepng,score_medicine);
                     powerball.push_back(uimap[j][i]);
+                    remain_medicine += 1;
                     break;
                 case '4':
                     map[j][i] = Door;
@@ -187,6 +191,11 @@ void Game::over(){
     Score -= 800;
 }
 
+void Game::win(){
+    Score += remain_medicine * 500 + 1000;
+    pause();
+    stat = Over;
+}
 
 void Game::pause(){
     if(stat == Over) return ;
@@ -211,11 +220,13 @@ void Game::obtain(int x,int y){
         QPixmap blankpng;
         uimap[x][y] ->setPixmap(blankpng);
         Score+=uimap[x][y]->score;
+        remain_food -= 1;
     }
 
     if(map[x][y] == Medicine){
         map[x][y] = Space;
         Score+=uimap[x][y]->score;
+        remain_medicine -= 1;
         QPixmap blankpng;
         for (int i = 0; i < this->powerball.size(); i++) {
             if (this->powerball.at(i) == uimap[x][y]) {
@@ -232,6 +243,9 @@ void Game::obtain(int x,int y){
 
         pacman->remain_panic_time=5000;
         pacman->remain_panic_flash_time=2000;
+    }
+    if(remain_food == 0){
+        win();
     }
 }
 

@@ -31,6 +31,7 @@ public:
     void start();
     void over();
     void pause();
+    void win();
 
     int Score;
     int flash_tick;
@@ -43,7 +44,7 @@ private:
 
     void panic_handler();
     int panic_flash_tick;
-
+    int remain_food,remain_medicine;
     void powerball_flash();
 };
 
