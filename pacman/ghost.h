@@ -18,13 +18,14 @@ public:
     void move();
     void caught();
     BaseH::ghoststate get_state();
+    BaseH::dirstate faceto;
     friend class Game;
 private:
     bool canmove(int, int, BaseH::dirstate);
     std::function<BaseH::dirstate()> strategy;
     Game* game;
     int id;
-    QPixmap img;
+    QPixmap img,img_inverse;
     BaseH::ghoststate state;
     int outcave_time;
     int dis_map[35][35];

@@ -32,7 +32,9 @@ public:
     void over();
     void pause();
     void win();
-
+    void lose();
+    void replay(int,int,QString);
+    int died;
     int Score;
     int flash_tick;
     friend class Pacman;

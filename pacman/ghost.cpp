@@ -10,6 +10,10 @@ using namespace BaseH;
 #define red_ghost QPixmap(":/images/ghost/red.png");
 #define blue_ghost QPixmap(":/images/ghost/blue.png");
 #define pink_ghost QPixmap(":/images/ghost/pink.png");
+#define orangeleft QPixmap(":/images/ghost/orangeleft.png");
+#define redleft QPixmap(":/images/ghost/redleft.png");
+#define blueleft QPixmap(":/images/ghost/blueleft.png");
+#define pinkleft QPixmap(":/images/ghost/pinkleft.png");
 //Ghost::Ghost(){
 
 //}
@@ -53,10 +57,11 @@ void Ghost::get_dis_map(){
 Ghost::Ghost(int ghid,int sx,int sy,int numb,Game* father) : Base(IMAGE_INIT,numb*100)
 {
     //img(IMAGE_INIT);
-    if (numb == 1) img=red_ghost;
-    if (numb == 2) img=pink_ghost;
-    if (numb == 3) img=orange_ghost;
-    if (numb == 4) img=blue_ghost;
+    if (numb == 1) {img=red_ghost;img_inverse = redleft;}
+    if (numb == 2) {img=pink_ghost;img_inverse = pinkleft;}
+    if (numb == 3) {img=orange_ghost;img_inverse = orangeleft;}
+    if (numb == 4) {img=blue_ghost;img_inverse = blueleft;}
+    faceto = Right;
     setPixmap(img);
     init_posx = sx;
     init_posy = sy;
@@ -163,6 +168,15 @@ void Ghost::move(){
   //      qDebug() << "-------------------------------" << endl;
     //if(state == Outingcave) qDebug() << "curDir= " <<  curDir << " " << id << endl;
     //if(state == Outingcave) qDebug() << x() << " " << y() << "->" << x()+deltax[curDir] << y()+deltay[curDir] << endl;
+    if (curDir == Left || curDir == Right)
+    {
+        if (curDir != faceto)
+        {
+            swap(img,img_inverse);
+            if (state!=Backingcave) this -> setPixmap(img);
+            faceto = curDir;
+        }
+    }
     this -> setPos(x()+deltax[curDir],y()+deltay[curDir]);
 //    qDebug() << x() << " " << y() << endl;
 }//ghost的移动要专门根据策略设置过，这里不清楚怎么搞，或许可以讨论一下

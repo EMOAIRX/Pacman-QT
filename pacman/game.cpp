@@ -7,6 +7,7 @@
 #include <QGraphicsScene>
 #include <QGraphicsItem>
 #include <iostream>
+#include <QList>
 #include <QFile>
 using namespace BaseH;
 
@@ -15,6 +16,7 @@ using namespace BaseH;
 Game::Game(int WW,int HH,QString map_src) : QGraphicsScene(50,50,WW*20,HH*20)
 {
     Score = 0;
+    died = 0;
     startX = 50;
     startY = 50;
     ObjectWidth = 20;
@@ -109,8 +111,7 @@ Game::Game(int WW,int HH,QString map_src) : QGraphicsScene(50,50,WW*20,HH*20)
             qDebug() << i << " " << j << endl;
         }
     }
-    for (int i = 0; i < num_ghost; i++)
-        addItem(ghost[i]);
+    for (int i = 0; i < num_ghost; i++) addItem(ghost[i]);
     qDebug() << "234 " << endl;
     for(int i=0;i<4;++i){
         ghost[i] -> get_dis_map();
@@ -131,10 +132,121 @@ Game::Game(int WW,int HH,QString map_src) : QGraphicsScene(50,50,WW*20,HH*20)
     ghost[2] -> strategy = chasing_orange(ghost[2],ghost[0],pacman);
     ghost[3] -> strategy = chasing_blue(ghost[3],pacman);
 
-
-
     this -> start();
 }
+/*
+void Game::replay(int WW,int HH,QString map_src)
+{
+    //clear();
+    Score = 0;
+    died = 0;
+    startX = 50;
+    startY = 50;
+    ObjectWidth = 20;
+    Width = WW;//X的范围
+    Height = HH;//Y的范围
+    qDebug() << "666 " << endl;
+    QFile mapfile(map_src);
+    mapfile.open(QIODevice::ReadOnly|QIODevice::Text);
+    QPixmap blankpng;
+    QPixmap wallpng(":/images/wall.png");
+    QPixmap foodpng(":/images/dot.png");
+    QPixmap medicinepng(":/images/power_ball.png");
+    QPixmap gatepng(":/images/gate.png");//这个是不是变成全局变量更好一点
+    remain_food = 0;
+    remain_medicine = 0;
+    qDebug() << "244" << endl;
+    static int num_ghost = 0;
+    for (int i=0;i<Height;i++)
+    {
+        QByteArray line = mapfile.readLine();
+        for (int j=0;j<Width;j++)
+        {
+            int x = startX+j*ObjectWidth;
+            int y = startY+i*ObjectWidth;
+            switch (line[j]) {
+                case '0':
+                    map[j][i] = Space;
+                    uimap[j][i] = new Base(blankpng,0);
+                    break;
+                case '1':
+                    map[j][i] = Wall;
+                    uimap[j][i] = new Base(wallpng,0);
+                    break;
+                case '2':
+                    map[j][i] = Food;
+                    uimap[j][i] = new Base(foodpng,score_food);
+                    remain_food += 1;
+                    break;
+                case '3':
+                    map[j][i] = Medicine;
+                    uimap[j][i] = new Base(medicinepng,score_medicine);
+                    powerball.push_back(uimap[j][i]);
+                    remain_medicine += 1;
+                    break;
+                case '4':
+                    map[j][i] = Door;
+                    uimap[j][i] = new Base(gatepng,0);
+                    doorx=j,doory=i;
+                    break;
+                case 'p':
+                    pacman->setPos(x,y);
+                    //addItem(pacman);
+
+                    map[j][i] = Space;
+                    uimap[j][i] = new Base(blankpng);
+                    break;
+                case 'g':
+                    ghost[num_ghost] = new Ghost(num_ghost,j,i,num_ghost+1,this);
+                    ghost[num_ghost] = new Ghost(num_ghost,j,i,num_ghost+1,this);
+                    //addItem(ghost[num_ghost]);
+                    num_ghost++;
+
+                    map[j][i] = Space;
+                    uimap[j][i] = new Base(blankpng);
+                    break;
+                case 'L':
+                    this -> Lposx = j;
+                    this -> Lposy = i;
+                    map[j][i] = Portal;
+                    uimap[j][i] = new Base(blankpng,0);
+                    break;
+                case 'R':
+                    this -> Rposx = j;
+                    this -> Rposy = i;
+                    map[j][i] = Portal;
+                    uimap[j][i] = new Base(blankpng,0);
+                    break;
+            }
+            uimap[j][i]->setPos(x,y);
+            //addItem(uimap[j][i]);
+            qDebug() << i << " " << j << endl;
+        }
+    }
+    for (int i = 0; i < num_ghost; i++) addItem(ghost[i]);
+    qDebug() << "234 " << endl;
+    for(int i=0;i<4;++i){
+        ghost[i] -> get_dis_map();
+        ghost_timer[i] = new QTimer(this);
+        connect(ghost_timer[i], &QTimer::timeout, [=](){this -> ghost_handler(i);});
+    }
+    pacman_timer = new QTimer(this);
+    panic_timer = new QTimer(this);
+    panic_flash_tick = 1;
+    connect(pacman_timer, &QTimer::timeout, [=](){this -> pacman_handler();});
+    powerball_flash_timer = new QTimer(this);
+    connect(powerball_flash_timer, &QTimer::timeout, [=](){this -> powerball_flash();});
+    connect(panic_timer, &QTimer::timeout, [=](){this -> panic_handler();});
+    powerball_flash_timer->start(INTERVAL_flash);
+    //ghost[0] -> setPixmap(orange_ghost);
+    ghost[0] -> strategy = chasing_red(ghost[0],pacman);
+    ghost[1] -> strategy = chasing_pink(ghost[1],pacman);
+    ghost[2] -> strategy = chasing_orange(ghost[2],ghost[0],pacman);
+    ghost[3] -> strategy = chasing_blue(ghost[3],pacman);
+
+    this -> start();
+}*/
+
 void Game::panic_handler(){
     int &rtime = pacman ->remain_panic_time;
     int &rrtime = pacman ->remain_panic_flash_time;
@@ -186,9 +298,18 @@ void Game::over(){
     //for(int i=0;i<4;++i) ghost_timer[i]->stop();
     //panic_timer -> stop();
     //stat = Over;
-
-    start();
-    Score -= 800;
+    died++;
+  //  stat = Over;
+    if (died < 3)
+    {
+        start();
+        Score -= 800;
+    }
+    else
+    {
+        lose();
+        return;
+    }
 }
 
 void Game::win(){
@@ -197,8 +318,14 @@ void Game::win(){
     stat = Over;
 }
 
+void Game::lose()
+{
+    pause();
+    stat = Over;
+}
+
 void Game::pause(){
-    if(stat == Over) return ;
+    if(stat == Over) return;
     if(stat == Start){
         stat = Pause;
         pacman_timer->stop();
@@ -293,7 +420,7 @@ void Game::powerball_flash()
         powerball_flash_timer->stop();
         return;
     }
-    qDebug()<<"hhh "<<flash_tick<<endl;
+    //qDebug()<<"hhh "<<flash_tick<<endl;
     if (flash_tick==2) {
         for (int i = 0; i < powerball.size(); i++) {
             powerball.at(i)->hide();
@@ -309,5 +436,15 @@ void Game::powerball_flash()
 
 Game::~Game()
 {
-    //Do Nothing
+    for (int i = 0; i < Height; i++) {
+        for (int j = 0; j < Width; j++) {
+            if (uimap[i][j] != nullptr)
+                delete uimap[i][j];
+        }
+        delete[] uimap[i];
+    }
+    delete[] uimap;
+    delete pacman_timer;
+    delete powerball_flash_timer;
+    for (int i=0;i<4;i++) delete ghost[i];
 }

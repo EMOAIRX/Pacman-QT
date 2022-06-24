@@ -2,9 +2,13 @@
     <qresource prefix="/">
         <file>images/ghost/bl1.png</file>
         <file>images/ghost/blue.png</file>
+        <file>images/ghost/blueleft.png</file>
         <file>images/ghost/orange.png</file>
+        <file>images/ghost/orangeleft.png</file>
         <file>images/ghost/pink.png</file>
+        <file>images/ghost/pinkleft.png</file>
         <file>images/ghost/red.png</file>
+        <file>images/ghost/redleft.png</file>
         <file>images/ghost/run.png</file>
         <file>images/pacman/a1.png</file>
         <file>images/pacman/b1.png</file>
