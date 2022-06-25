@@ -26,7 +26,7 @@ dirstate deter_dir(std::function<pii()> gdist,int x,int y,dirstate curdir,pacman
         lis = vector<dirstate>{yy>0?Down:Up,xx>0?Right:Left,xx>0?Left:Right,yy>0?Up:Down};
     for (auto d : lis){
         if(d==(curdir^1) && pacs == Normal) continue;
-        if (nxt(x,y,d) == Wall || nxt(x,y,d) == Door) continue;
+        if (nxt(x,y,d) == Wall || nxt(x,y,d) == Door || nxt(x,y,d) == Portal) continue;
         return d;
     }
     return Stop;
