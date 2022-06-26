@@ -71,12 +71,12 @@ void MainWindow::InitLabels()
 
 void MainWindow::button_pushed()
 {
-    //delete game;
-    //delete ui;
-    //int w = 27, h = 25;
-    //game = new Game(w,h,":/map/map1.txt");
-    //ui->graphicsView->setScene(game);
-    //game->replay(27,25,":/map/map1.txt");
+    int w = 27, h = 25;
+    lose_label->hide();
+    win_label->hide();
+    score_timer->start(25);
+    game->replay(w,h,":/map/map1.txt");
+
 }
 
 void MainWindow::update_score()
@@ -89,7 +89,7 @@ void MainWindow::update_score()
             win_label->show();
         else
            lose_label->show();
-        //playagain->show();
+        playagain->show();
     }
 }
 

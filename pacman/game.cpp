@@ -86,7 +86,7 @@ Game::Game(int WW,int HH,QString map_src) : QGraphicsScene(50,50,WW*20,HH*20)
                     break;
                 case 'g':
                     ghost[num_ghost] = new Ghost(num_ghost,j,i,num_ghost+1,this);
-                    ghost[num_ghost] = new Ghost(num_ghost,j,i,num_ghost+1,this);
+                    //ghost[num_ghost] = new Ghost(num_ghost,j,i,num_ghost+1,this);
                     //addItem(ghost[num_ghost]);
                     num_ghost++;
 
@@ -134,7 +134,7 @@ Game::Game(int WW,int HH,QString map_src) : QGraphicsScene(50,50,WW*20,HH*20)
 
     this -> start();
 }
-/*
+
 void Game::replay(int WW,int HH,QString map_src)
 {
     //clear();
@@ -147,6 +147,7 @@ void Game::replay(int WW,int HH,QString map_src)
     Height = HH;//Y的范围
     qDebug() << "666 " << endl;
     QFile mapfile(map_src);
+    powerball.clear();
     mapfile.open(QIODevice::ReadOnly|QIODevice::Text);
     QPixmap blankpng;
     QPixmap wallpng(":/images/wall.png");
@@ -167,70 +168,66 @@ void Game::replay(int WW,int HH,QString map_src)
             switch (line[j]) {
                 case '0':
                     map[j][i] = Space;
-                    uimap[j][i] = new Base(blankpng,0);
+                    uimap[j][i] -> setPixmap(blankpng);
                     break;
                 case '1':
                     map[j][i] = Wall;
-                    uimap[j][i] = new Base(wallpng,0);
+                    uimap[j][i] -> setPixmap(wallpng);
                     break;
                 case '2':
                     map[j][i] = Food;
-                    uimap[j][i] = new Base(foodpng,score_food);
+                    uimap[j][i] -> setPixmap(foodpng);
                     remain_food += 1;
                     break;
                 case '3':
                     map[j][i] = Medicine;
-                    uimap[j][i] = new Base(medicinepng,score_medicine);
+                    uimap[j][i] -> setPixmap(medicinepng);
                     powerball.push_back(uimap[j][i]);
                     remain_medicine += 1;
                     break;
                 case '4':
                     map[j][i] = Door;
-                    uimap[j][i] = new Base(gatepng,0);
+                    uimap[j][i] -> setPixmap(gatepng);
                     doorx=j,doory=i;
                     break;
                 case 'p':
                     pacman->setPos(x,y);
-                    //addItem(pacman);
 
                     map[j][i] = Space;
                     uimap[j][i] = new Base(blankpng);
                     break;
                 case 'g':
-                    ghost[num_ghost] = new Ghost(num_ghost,j,i,num_ghost+1,this);
-                    ghost[num_ghost] = new Ghost(num_ghost,j,i,num_ghost+1,this);
-                    //addItem(ghost[num_ghost]);
+                    ghost[num_ghost] ->setPos(x,y);
                     num_ghost++;
 
                     map[j][i] = Space;
-                    uimap[j][i] = new Base(blankpng);
+                    uimap[j][i] -> setPixmap(blankpng);
                     break;
                 case 'L':
                     this -> Lposx = j;
                     this -> Lposy = i;
                     map[j][i] = Portal;
-                    uimap[j][i] = new Base(blankpng,0);
+                    uimap[j][i] -> setPixmap(blankpng);
                     break;
                 case 'R':
                     this -> Rposx = j;
                     this -> Rposy = i;
                     map[j][i] = Portal;
-                    uimap[j][i] = new Base(blankpng,0);
+                    uimap[j][i] -> setPixmap(blankpng);
                     break;
             }
             uimap[j][i]->setPos(x,y);
-            //addItem(uimap[j][i]);
-            qDebug() << i << " " << j << endl;
         }
     }
-    for (int i = 0; i < num_ghost; i++) addItem(ghost[i]);
     qDebug() << "234 " << endl;
     for(int i=0;i<4;++i){
         ghost[i] -> get_dis_map();
         ghost_timer[i] = new QTimer(this);
         connect(ghost_timer[i], &QTimer::timeout, [=](){this -> ghost_handler(i);});
     }
+    delete pacman_timer;
     pacman_timer = new QTimer(this);
+    delete panic_timer;
     panic_timer = new QTimer(this);
     panic_flash_tick = 1;
     connect(pacman_timer, &QTimer::timeout, [=](){this -> pacman_handler();});
@@ -245,7 +242,7 @@ void Game::replay(int WW,int HH,QString map_src)
     ghost[3] -> strategy = chasing_blue(ghost[3],pacman);
 
     this -> start();
-}*/
+}
 
 void Game::panic_handler(){
     int &rtime = pacman ->remain_panic_time;
@@ -275,6 +272,7 @@ void Game::panic_handler(){
 
 
 void Game::start(){
+    qDebug()<<"start"<<endl;
     pacman->remain_panic_flash_time=0;
     pacman->remain_panic_time=0;
     pacman->reposition();//(startX+W*pacman->init_posx,startY+pacman->init_posy);
