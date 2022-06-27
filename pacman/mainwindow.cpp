@@ -25,7 +25,7 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->graphicsView->setGeometry(50,50,w*20,h*20);
     //qDebug() << "233 " << endl;
 
-    game = new Game(w,h,":/map/map1.txt");
+    game = new Game(w,h,":/map/map1.txt",this);
     InitLabels();
     ui->graphicsView->setScene(game);
     //qDebug() << "233 " << endl;
@@ -62,11 +62,14 @@ void MainWindow::InitLabels()
     lose_label->setGeometry(50,24,70,26);
     lose_label->hide();
 
-    playagain = new QPushButton("playagain",this);
-    playagain->setGeometry(300,12,200,26);
+    playagain = new QLabel(this);
+    playagain->setGeometry(300,20,500,40);
+    playagain->setText("Press Enter to Play Again");
+    playagain->setStyleSheet("QLabel {font-family: Fixedsys;color: red;font-size: 32px;}");
     playagain->hide();
-    connect(playagain,SIGNAL(clicked()),this,SLOT(button_pushed()));
-
+//    playagain = new QPushButton("playagain",this);
+//    connect(playagain,SIGNAL(clicked()),this,SLOT(button_pushed()));
+    //connect(playagain,SIGNAL(clicked()),playagain,);
 }
 
 void MainWindow::button_pushed()

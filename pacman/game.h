@@ -9,14 +9,15 @@
 #include "ghost.h"
 #include "base.h"
 
-
+class MainWindow;
 class Game : public QGraphicsScene
 {
     Q_OBJECT
 
 public:
-    Game(int,int,QString);
+    Game(int,int,QString,MainWindow*);
     ~Game();
+    MainWindow* mainwindow;
     Pacman* pacman;
     Ghost* ghost[4];
     QTimer* pacman_timer;

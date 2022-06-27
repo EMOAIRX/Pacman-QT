@@ -25,10 +25,11 @@ private:
     Game *game;
     QLabel *score,*score_title,*win_label,*lose_label;
     QTimer *score_timer;
-    QPushButton *playagain;
+    QLabel *playagain;
 
     void InitLabels();
     void update_score();
+    friend class Game;
 
 protected:
     void keyPressEvent(QKeyEvent *);

@@ -9,12 +9,14 @@
 #include <iostream>
 #include <QList>
 #include <QFile>
+#include <mainwindow.h>
 using namespace BaseH;
 
 #define INTERVAL_PANIC_FLASH 20
 
-Game::Game(int WW,int HH,QString map_src) : QGraphicsScene(50,50,WW*20,HH*20)
+Game::Game(int WW,int HH,QString map_src,MainWindow* fa) : QGraphicsScene(50,50,WW*20,HH*20)
 {
+    mainwindow = fa;
     Score = 0;
     died = 0;
     startX = 50;
@@ -296,7 +298,7 @@ void Game::over(){
     //for(int i=0;i<4;++i) ghost_timer[i]->stop();
     //panic_timer -> stop();
     //stat = Over;
-    died++;
+    died+=1000;
   //  stat = Over;
     if (died < 3)
     {
@@ -396,6 +398,7 @@ void Game::pacman_handler(){
 
 void Game::newpress(Qt::Key key){
     //qDebug() << "Press" << key  << endl;
+    //qDebug() << Qt::Key_Enter << endl;
     switch (key)
     {
     case Qt::Key_W : pacman -> set_nxtDir(Up); break;
@@ -407,6 +410,14 @@ void Game::newpress(Qt::Key key){
     case Qt::Key_Left : pacman -> set_nxtDir(Left); break;
     case Qt::Key_Right : pacman -> set_nxtDir(Right); break;
     case Qt::Key_Space : this -> pause(); break;
+    case Qt::Key_Return : if (this -> stat == Over){
+            int w = 27, h = 25;
+            mainwindow -> lose_label->hide();
+            mainwindow -> win_label -> hide();
+            mainwindow -> playagain -> hide();
+            mainwindow -> score_timer -> start(25);
+            this -> replay(w,h,":/map/map1.txt");
+        } break;
         default: break;
     }
     //qDebug() << pacman_timer -> timeout() << endl;
