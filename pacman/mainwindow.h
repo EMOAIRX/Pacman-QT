@@ -34,8 +34,8 @@ private:
 protected:
     void keyPressEvent(QKeyEvent *);
     //virtual void paintEvent(QPaintEvent *event);
-private slots:
-    void button_pushed();
+//private slots:
+//    void button_pushed();
 };
 
 #endif // MAINWINDOW_H

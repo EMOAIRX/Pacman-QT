@@ -46,7 +46,7 @@ Game::Game(int WW,int HH,QString map_src,MainWindow* fa) : QGraphicsScene(50,50,
     remain_food = 0;
     remain_medicine = 0;
     qDebug() << "244" << endl;
-    static int num_ghost = 0;
+    int num_ghost = 0;
     for (int i=0;i<Height;i++)
     {
         QByteArray line = mapfile.readLine();
@@ -159,7 +159,7 @@ void Game::replay(int WW,int HH,QString map_src)
     remain_food = 0;
     remain_medicine = 0;
     qDebug() << "244" << endl;
-    static int num_ghost = 0;
+    int num_ghost = 0;
     for (int i=0;i<Height;i++)
     {
         QByteArray line = mapfile.readLine();
@@ -167,6 +167,10 @@ void Game::replay(int WW,int HH,QString map_src)
         {
             int x = startX+j*ObjectWidth;
             int y = startY+i*ObjectWidth;
+            qDebug() << i << " " << j << " " << x << " " << " " << y;
+            qDebug() << line[j];
+            qDebug() << uimap[j][i];
+
             switch (line[j]) {
                 case '0':
                     map[j][i] = Space;
@@ -224,6 +228,7 @@ void Game::replay(int WW,int HH,QString map_src)
     qDebug() << "234 " << endl;
     for(int i=0;i<4;++i){
         ghost[i] -> get_dis_map();
+        delete ghost_timer[i];
         ghost_timer[i] = new QTimer(this);
         connect(ghost_timer[i], &QTimer::timeout, [=](){this -> ghost_handler(i);});
     }

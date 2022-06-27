@@ -67,20 +67,8 @@ void MainWindow::InitLabels()
     playagain->setText("Press Enter to Play Again");
     playagain->setStyleSheet("QLabel {font-family: Fixedsys;color: red;font-size: 32px;}");
     playagain->hide();
-//    playagain = new QPushButton("playagain",this);
-//    connect(playagain,SIGNAL(clicked()),this,SLOT(button_pushed()));
-    //connect(playagain,SIGNAL(clicked()),playagain,);
 }
 
-void MainWindow::button_pushed()
-{
-    int w = 27, h = 25;
-    lose_label->hide();
-    win_label->hide();
-    score_timer->start(25);
-    game->replay(w,h,":/map/map1.txt");
-
-}
 
 void MainWindow::update_score()
 {
