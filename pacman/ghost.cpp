@@ -4,16 +4,16 @@
 using namespace BaseH;
 #define W ObjectWidth
 #define IMAGE_INIT QPixmap(":/images/ghost/bl1.png")
-#define run_image QPixmap(":/images/ghost/run.png")
+#define run_image QPixmap(":/images/ghost/runleft.png")
 
-#define orange_ghost QPixmap(":/images/ghost/orange.png/");
-#define red_ghost QPixmap(":/images/ghost/red.png");
-#define blue_ghost QPixmap(":/images/ghost/blue.png");
-#define pink_ghost QPixmap(":/images/ghost/pink.png");
-#define orangeleft QPixmap(":/images/ghost/orangeleft.png");
-#define redleft QPixmap(":/images/ghost/redleft.png");
-#define blueleft QPixmap(":/images/ghost/blueleft.png");
-#define pinkleft QPixmap(":/images/ghost/pinkleft.png");
+#define orange_ghost QPixmap(":/images/ghost/orangeright1.png/");
+#define red_ghost QPixmap(":/images/ghost/redright1.png");
+#define blue_ghost QPixmap(":/images/ghost/blueright1.png");
+#define pink_ghost QPixmap(":/images/ghost/pinkright1.png");
+#define orangeleft QPixmap(":/images/ghost/orangeleft1.png");
+#define redleft QPixmap(":/images/ghost/redleft1.png");
+#define blueleft QPixmap(":/images/ghost/blueleft1.png");
+#define pinkleft QPixmap(":/images/ghost/pinkleft1.png");
 //Ghost::Ghost(){
 
 //}
@@ -57,12 +57,50 @@ void Ghost::get_dis_map(){
 Ghost::Ghost(int ghid,int sx,int sy,int numb,Game* father) : Base(IMAGE_INIT,numb*100)
 {
     //img(IMAGE_INIT);
-    if (numb == 1) {img=red_ghost;img_inverse = redleft;}
-    if (numb == 2) {img=pink_ghost;img_inverse = pinkleft;}
-    if (numb == 3) {img=orange_ghost;img_inverse = orangeleft;}
-    if (numb == 4) {img=blue_ghost;img_inverse = blueleft;}
+    if (numb == 1) {  // red
+        animations[Left].push_back(QPixmap(":/images/ghost/redleft1.png"));
+        animations[Left].push_back(QPixmap(":/images/ghost/redleft2.png"));
+        animations[Right].push_back(QPixmap(":/images/ghost/redright1.png"));
+        animations[Right].push_back(QPixmap(":/images/ghost/redright2.png"));
+        animations[Up].push_back(QPixmap(":/images/ghost/redup1.png"));
+        animations[Up].push_back(QPixmap(":/images/ghost/redup2.png"));
+        animations[Down].push_back(QPixmap(":/images/ghost/reddown1.png"));
+        animations[Down].push_back(QPixmap(":/images/ghost/reddown2.png"));
+    }
+    if (numb == 2) {  // pink
+        animations[Left].push_back(QPixmap(":/images/ghost/pinkleft1.png"));
+        animations[Left].push_back(QPixmap(":/images/ghost/pinkleft2.png"));
+        animations[Right].push_back(QPixmap(":/images/ghost/pinkright1.png"));
+        animations[Right].push_back(QPixmap(":/images/ghost/pinkright2.png"));
+        animations[Up].push_back(QPixmap(":/images/ghost/pinkup1.png"));
+        animations[Up].push_back(QPixmap(":/images/ghost/pinkup2.png"));
+        animations[Down].push_back(QPixmap(":/images/ghost/pinkdown1.png"));
+        animations[Down].push_back(QPixmap(":/images/ghost/pinkdown2.png"));
+    }
+    if (numb == 3) {  // orange
+        animations[Left].push_back(QPixmap(":/images/ghost/orangeleft1.png"));
+        animations[Left].push_back(QPixmap(":/images/ghost/orangeleft2.png"));
+        animations[Right].push_back(QPixmap(":/images/ghost/orangeright1.png"));
+        animations[Right].push_back(QPixmap(":/images/ghost/orangeright2.png"));
+        animations[Up].push_back(QPixmap(":/images/ghost/orangeup1.png"));
+        animations[Up].push_back(QPixmap(":/images/ghost/orangeup2.png"));
+        animations[Down].push_back(QPixmap(":/images/ghost/orangedown1.png"));
+        animations[Down].push_back(QPixmap(":/images/ghost/orangedown2.png"));
+    }
+    if (numb == 4) {  // blue
+        animations[Left].push_back(QPixmap(":/images/ghost/blueleft1.png"));
+        animations[Left].push_back(QPixmap(":/images/ghost/blueleft2.png"));
+        animations[Right].push_back(QPixmap(":/images/ghost/blueright1.png"));
+        animations[Right].push_back(QPixmap(":/images/ghost/blueright2.png"));
+        animations[Up].push_back(QPixmap(":/images/ghost/blueup1.png"));
+        animations[Up].push_back(QPixmap(":/images/ghost/blueup2.png"));
+        animations[Down].push_back(QPixmap(":/images/ghost/bluedown1.png"));
+        animations[Down].push_back(QPixmap(":/images/ghost/bluedown2.png"));
+    }
+    animations[Stop] = animations[Right];
+    animation_index = 0;
     faceto = Right;
-    setPixmap(img);
+    setPixmap(animations[faceto][animation_index]);
     init_posx = sx;
     init_posy = sy;
     id = ghid;
@@ -146,7 +184,6 @@ void Ghost::move(){
                 if(preX==init_posx && preY==init_posy){
                     state = Incave;
                     curDir = Stop;
-                    this -> setPixmap(img);
                     outcave_time = 2000;
                 } else{
                     curDir = Stop;
@@ -168,15 +205,6 @@ void Ghost::move(){
   //      qDebug() << "-------------------------------" << endl;
     //if(state == Outingcave) qDebug() << "curDir= " <<  curDir << " " << id << endl;
     //if(state == Outingcave) qDebug() << x() << " " << y() << "->" << x()+deltax[curDir] << y()+deltay[curDir] << endl;
-    if (curDir == Left || curDir == Right)
-    {
-        if (curDir != faceto)
-        {
-            swap(img,img_inverse);
-            if (state!=Backingcave) this -> setPixmap(img);
-            faceto = curDir;
-        }
-    }
     this -> setPos(x()+deltax[curDir],y()+deltay[curDir]);
 //    qDebug() << x() << " " << y() << endl;
 }//ghost的移动要专门根据策略设置过，这里不清楚怎么搞，或许可以讨论一下

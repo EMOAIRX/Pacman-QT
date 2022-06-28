@@ -8,6 +8,8 @@ int BaseH::map[35][35];
 int BaseH::doorx,BaseH::doory;
 const int BaseH::INTERVAL_ghost=10;
 const int BaseH::INTERVAL_pacman=9;
+const int BaseH::INTERVAL_pacman_animation = 250;
+const int BaseH::INTERVAL_ghost_animation = 250;
 const int BaseH::INTERVAL_flash = 250;
 const int BaseH::score_food = 10;
 const int BaseH::score_medicine = 20;

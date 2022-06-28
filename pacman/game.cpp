@@ -14,14 +14,14 @@ using namespace BaseH;
 
 #define INTERVAL_PANIC_FLASH 20
 
-Game::Game(int WW,int HH,QString map_src,MainWindow* fa) : QGraphicsScene(50,50,WW*20,HH*20)
+Game::Game(int WW,int HH,QString map_src,MainWindow* fa) : QGraphicsScene(50,50,WW*32,HH*32)
 {
     mainwindow = fa;
     Score = 0;
     died = 0;
     startX = 50;
     startY = 50;
-    ObjectWidth = 20;
+    ObjectWidth = 32;
     Width = WW;//X的范围
     Height = HH;//Y的范围
     qDebug() << "666 " << endl;
@@ -39,10 +39,10 @@ Game::Game(int WW,int HH,QString map_src,MainWindow* fa) : QGraphicsScene(50,50,
     QFile mapfile(map_src);
     mapfile.open(QIODevice::ReadOnly|QIODevice::Text);
     QPixmap blankpng;
-    QPixmap wallpng(":/images/wall.png");
-    QPixmap foodpng(":/images/dot.png");
-    QPixmap medicinepng(":/images/power_ball.png");
-    QPixmap gatepng(":/images/gate.png");//这个是不是变成全局变量更好一点
+    QPixmap wallpng(":/images/map_objects/wall.png");
+    QPixmap foodpng(":/images/map_objects/dot.png");
+    QPixmap medicinepng(":/images/map_objects/power_ball.png");
+    QPixmap gatepng(":/images/map_objects/gate.png");//这个是不是变成全局变量更好一点
     remain_food = 0;
     remain_medicine = 0;
     qDebug() << "244" << endl;
@@ -119,11 +119,15 @@ Game::Game(int WW,int HH,QString map_src,MainWindow* fa) : QGraphicsScene(50,50,
         ghost[i] -> get_dis_map();
         ghost_timer[i] = new QTimer(this);
         connect(ghost_timer[i], &QTimer::timeout, [=](){this -> ghost_handler(i);});
+        ghost_animation_timer[i] = new QTimer(this);
+        connect(ghost_animation_timer[i], &QTimer::timeout, [=](){this -> ghost_animation_handler(i);});
     }
     pacman_timer = new QTimer(this);
+    pacman_animation_timer = new QTimer(this);
     panic_timer = new QTimer(this);
     panic_flash_tick = 1;
     connect(pacman_timer, &QTimer::timeout, [=](){this -> pacman_handler();});
+    connect(pacman_animation_timer, &QTimer::timeout, [=](){this -> pacman_animation_handler();});
     powerball_flash_timer = new QTimer(this);
     connect(powerball_flash_timer, &QTimer::timeout, [=](){this -> powerball_flash();});
     connect(panic_timer, &QTimer::timeout, [=](){this -> panic_handler();});
@@ -144,7 +148,7 @@ void Game::replay(int WW,int HH,QString map_src)
     died = 0;
     startX = 50;
     startY = 50;
-    ObjectWidth = 20;
+    ObjectWidth = 32;
     Width = WW;//X的范围
     Height = HH;//Y的范围
     qDebug() << "666 " << endl;
@@ -152,10 +156,10 @@ void Game::replay(int WW,int HH,QString map_src)
     powerball.clear();
     mapfile.open(QIODevice::ReadOnly|QIODevice::Text);
     QPixmap blankpng;
-    QPixmap wallpng(":/images/wall.png");
-    QPixmap foodpng(":/images/dot.png");
-    QPixmap medicinepng(":/images/power_ball.png");
-    QPixmap gatepng(":/images/gate.png");//这个是不是变成全局变量更好一点
+    QPixmap wallpng(":/images/map_objects/wall.png");
+    QPixmap foodpng(":/images/map_objects/dot.png");
+    QPixmap medicinepng(":/images/map_objects/power_ball.png");
+    QPixmap gatepng(":/images/map_objects/gate.png");//这个是不是变成全局变量更好一点
     remain_food = 0;
     remain_medicine = 0;
     qDebug() << "244" << endl;
@@ -234,10 +238,13 @@ void Game::replay(int WW,int HH,QString map_src)
     }
     delete pacman_timer;
     pacman_timer = new QTimer(this);
+    delete pacman_animation_timer;
+    pacman_animation_timer = new QTimer(this);
     delete panic_timer;
     panic_timer = new QTimer(this);
     panic_flash_tick = 1;
     connect(pacman_timer, &QTimer::timeout, [=](){this -> pacman_handler();});
+    connect(pacman_animation_timer, &QTimer::timeout, [=](){this -> pacman_animation_handler();});
     powerball_flash_timer = new QTimer(this);
     connect(powerball_flash_timer, &QTimer::timeout, [=](){this -> powerball_flash();});
     connect(panic_timer, &QTimer::timeout, [=](){this -> panic_handler();});
@@ -288,8 +295,10 @@ void Game::start(){
     stat = Start;
     panic_timer -> start(INTERVAL_PANIC_FLASH);
     pacman_timer-> start(INTERVAL_pacman);
+    pacman_animation_timer -> start(INTERVAL_pacman_animation);
     for(int i=0;i<4;++i){
         ghost_timer[i]->start(INTERVAL_ghost);
+        ghost_animation_timer[i]->start(INTERVAL_ghost_animation);
         ghost[i] -> outcave_time = 200 + i * 800;
         ghost[i] -> state = Incave;
         ghost[i] -> reposition();
@@ -401,6 +410,23 @@ void Game::pacman_handler(){
     pacman -> move();
 }
 
+
+void Game::pacman_animation_handler() {
+    if (pacman->state != Panic) {
+        pacman->animation_index++;
+        if (pacman->animation_index >= pacman->animations[pacman->curDir].size()) pacman->animation_index = 0;
+        pacman->setPixmap(pacman->animations[pacman->curDir][pacman->animation_index]);
+    }
+}
+
+void Game::ghost_animation_handler(int i) {
+    if (ghost[i]->state != Backingcave) {
+        ghost[i]->animation_index++;
+        if (ghost[i]->animation_index >= ghost[i]->animations[ghost[i]->curDir].size()) ghost[i]->animation_index = 0;
+        ghost[i] -> setPixmap(ghost[i]->animations[ghost[i]->curDir][ghost[i]->animation_index]);
+    }
+}
+
 void Game::newpress(Qt::Key key){
     //qDebug() << "Press" << key  << endl;
     //qDebug() << Qt::Key_Enter << endl;
@@ -416,7 +442,7 @@ void Game::newpress(Qt::Key key){
     case Qt::Key_Right : pacman -> set_nxtDir(Right); break;
     case Qt::Key_Space : this -> pause(); break;
     case Qt::Key_Return : if (this -> stat == Over){
-            int w = 27, h = 25;
+            int w = 27, h = 21;
             mainwindow -> lose_label->hide();
             mainwindow -> win_label -> hide();
             mainwindow -> playagain -> hide();
@@ -459,6 +485,7 @@ Game::~Game()
     }
     delete[] uimap;
     delete pacman_timer;
+    delete pacman_animation_timer;
     delete powerball_flash_timer;
     for (int i=0;i<4;i++) delete ghost[i];
 }

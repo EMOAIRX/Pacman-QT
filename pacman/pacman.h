@@ -2,6 +2,7 @@
 #define PACMAN_H
 #include "base.h"
 #include <functional>
+#include <QVector>
 
 class Pacman : public Base
 {
@@ -19,6 +20,8 @@ private:
     int remain_panic_time,remain_panic_flash_time;
     Game* game;
     BaseH::pacmanstate state;
+    QVector<QPixmap> animations[5];
+    int animation_index;
 };
 
 

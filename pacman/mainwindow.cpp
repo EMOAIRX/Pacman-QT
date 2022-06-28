@@ -7,8 +7,8 @@
 #include <QDebug>
 #include <QLabel>
 #include <QTimer>
-#define redheart QPixmap(":/images/love_heart.png")
-#define blankheart QPixmap(":/images/blank_heart.png")
+#define redheart QPixmap(":/images/map_objects/love_heart.png")
+#define blankheart QPixmap(":/images/map_objects/blank_heart.png")
 
 using namespace BaseH;
 #define W BaseH::ObjectWidth
@@ -23,8 +23,8 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->graphicsView->setStyleSheet("QGraphicsView {border: none;}");
     ui->graphicsView->setBackgroundBrush(Qt::black);
     ui->graphicsView->setFocusPolicy(Qt::NoFocus);
-    int w = 27, h = 25;
-    ui->graphicsView->setGeometry(50,50,w*20,h*20);
+    int w = 27, h = 21;
+    ui->graphicsView->setGeometry(50,50,w*32,h*32);
     //qDebug() << "233 " << endl;
 
     game = new Game(w,h,":/map/map1.txt",this);

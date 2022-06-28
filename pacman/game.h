@@ -20,8 +20,8 @@ public:
     MainWindow* mainwindow;
     Pacman* pacman;
     Ghost* ghost[4];
-    QTimer* pacman_timer;
-    QTimer* panic_timer,*ghost_timer[4];//Invincible time after taking drugs
+    QTimer* pacman_timer, *pacman_animation_timer;
+    QTimer* panic_timer,*ghost_timer[4], *ghost_animation_timer[4];//Invincible time after taking drugs
     QTimer *powerball_flash_timer;//frequence of the ball flash
     QThread* timerThread;
     Base*** uimap;
@@ -43,7 +43,9 @@ public:
 private:
     int Lposx,Lposy,Rposx,Rposy;
     void pacman_handler();
+    void pacman_animation_handler();
     void ghost_handler(int);
+    void ghost_animation_handler(int);
 
     void panic_handler();
     int panic_flash_tick;

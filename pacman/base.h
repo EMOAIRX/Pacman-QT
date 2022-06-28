@@ -21,7 +21,7 @@ namespace BaseH{
     extern int Width,Height,ObjectWidth;
     extern int startX,startY;
     extern int map[35][35];
-    extern const int INTERVAL_ghost,INTERVAL_pacman;
+    extern const int INTERVAL_ghost,INTERVAL_pacman, INTERVAL_pacman_animation, INTERVAL_ghost_animation;
     extern int doorx,doory;
     extern const int INTERVAL_flash;
     extern const int score_food,score_medicine;

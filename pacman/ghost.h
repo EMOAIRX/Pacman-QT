@@ -2,6 +2,7 @@
 #define GHOST_H
 #include "base.h"
 #include <functional>
+#include <QVector>
 
 std::function<BaseH::dirstate()> chasing_red(Ghost*,Pacman*);
 std::function<BaseH::dirstate()> chasing_pink(Ghost*,Pacman*);
@@ -25,7 +26,8 @@ private:
     std::function<BaseH::dirstate()> strategy;
     Game* game;
     int id;
-    QPixmap img,img_inverse;
+    QVector<QPixmap> animations[5];
+    int animation_index;
     BaseH::ghoststate state;
     int outcave_time;
     int dis_map[35][35];

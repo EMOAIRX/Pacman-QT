@@ -1,25 +1,8 @@
 <RCC>
     <qresource prefix="/">
         <file>images/ghost/bl1.png</file>
-        <file>images/ghost/blue.png</file>
-        <file>images/ghost/blueleft.png</file>
-        <file>images/ghost/orange.png</file>
-        <file>images/ghost/orangeleft.png</file>
-        <file>images/ghost/pink.png</file>
-        <file>images/ghost/pinkleft.png</file>
-        <file>images/ghost/red.png</file>
-        <file>images/ghost/redleft.png</file>
-        <file>images/ghost/run.png</file>
         <file>images/pacman/a1.png</file>
         <file>images/pacman/b1.png</file>
-        <file>images/blank_heart.png</file>
-        <file>images/dot.png</file>
-        <file>images/dotb.png</file>
-        <file>images/gate.png</file>
-        <file>images/love_heart.png</file>
-        <file>images/power_ball.png</file>
-        <file>images/tmp.png</file>
-        <file>images/wall.png</file>
         <file>map/map1.txt</file>
         <file>base.cpp</file>
         <file>base.h</file>
@@ -39,5 +22,63 @@
         <file>pacman.h</file>
         <file>pacman.pro</file>
         <file>res.qrc</file>
+        <file>images/ghost/bl2.png</file>
+        <file>images/ghost/bl3.png</file>
+        <file>images/ghost/bl4.png</file>
+        <file>images/ghost/bluedown1.png</file>
+        <file>images/ghost/bluedown2.png</file>
+        <file>images/ghost/blueleft1.png</file>
+        <file>images/ghost/blueleft2.png</file>
+        <file>images/ghost/blueright1.png</file>
+        <file>images/ghost/blueright2.png</file>
+        <file>images/ghost/blueup1.png</file>
+        <file>images/ghost/blueup2.png</file>
+        <file>images/ghost/orangedown1.png</file>
+        <file>images/ghost/orangedown2.png</file>
+        <file>images/ghost/orangeleft1.png</file>
+        <file>images/ghost/orangeleft2.png</file>
+        <file>images/ghost/orangeright1.png</file>
+        <file>images/ghost/orangeright2.png</file>
+        <file>images/ghost/orangeup1.png</file>
+        <file>images/ghost/orangeup2.png</file>
+        <file>images/ghost/pinkdown1.png</file>
+        <file>images/ghost/pinkdown2.png</file>
+        <file>images/ghost/pinkleft1.png</file>
+        <file>images/ghost/pinkleft2.png</file>
+        <file>images/ghost/pinkright1.png</file>
+        <file>images/ghost/pinkright2.png</file>
+        <file>images/ghost/pinkup1.png</file>
+        <file>images/ghost/pinkup2.png</file>
+        <file>images/ghost/reddown1.png</file>
+        <file>images/ghost/reddown2.png</file>
+        <file>images/ghost/redleft1.png</file>
+        <file>images/ghost/redleft2.png</file>
+        <file>images/ghost/redright1.png</file>
+        <file>images/ghost/redright2.png</file>
+        <file>images/ghost/redup1.png</file>
+        <file>images/ghost/redup2.png</file>
+        <file>images/ghost/rundown.png</file>
+        <file>images/ghost/runleft.png</file>
+        <file>images/ghost/runright.png</file>
+        <file>images/ghost/runup.png</file>
+        <file>images/map_objects/blank_heart.png</file>
+        <file>images/map_objects/dot.png</file>
+        <file>images/map_objects/dotb.png</file>
+        <file>images/map_objects/gate.png</file>
+        <file>images/map_objects/love_heart.png</file>
+        <file>images/map_objects/power_ball.png</file>
+        <file>images/map_objects/wall.png</file>
+        <file>images/pacman/pacmandown1.png</file>
+        <file>images/pacman/pacmandown2.png</file>
+        <file>images/pacman/pacmandown3.png</file>
+        <file>images/pacman/pacmanleft1.png</file>
+        <file>images/pacman/pacmanleft2.png</file>
+        <file>images/pacman/pacmanleft3.png</file>
+        <file>images/pacman/pacmanright1.png</file>
+        <file>images/pacman/pacmanright2.png</file>
+        <file>images/pacman/pacmanright3.png</file>
+        <file>images/pacman/pacmanup1.png</file>
+        <file>images/pacman/pacmanup2.png</file>
+        <file>images/pacman/pacmanup3.png</file>
     </qresource>
 </RCC>
