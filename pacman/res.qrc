@@ -12,9 +12,11 @@
         <file>images/ghost/run.png</file>
         <file>images/pacman/a1.png</file>
         <file>images/pacman/b1.png</file>
+        <file>images/blank_heart.png</file>
         <file>images/dot.png</file>
         <file>images/dotb.png</file>
         <file>images/gate.png</file>
+        <file>images/love_heart.png</file>
         <file>images/power_ball.png</file>
         <file>images/tmp.png</file>
         <file>images/wall.png</file>

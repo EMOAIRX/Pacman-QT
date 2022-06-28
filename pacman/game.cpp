@@ -303,7 +303,7 @@ void Game::over(){
     //for(int i=0;i<4;++i) ghost_timer[i]->stop();
     //panic_timer -> stop();
     //stat = Over;
-    died+=1000;
+    died++;
   //  stat = Over;
     if (died < 3)
     {

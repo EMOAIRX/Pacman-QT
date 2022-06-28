@@ -26,7 +26,7 @@ private:
     QLabel *score,*score_title,*win_label,*lose_label;
     QTimer *score_timer;
     QLabel *playagain;
-
+    QLabel *remain1,*remain2,*remain3;
     void InitLabels();
     void update_score();
     friend class Game;
