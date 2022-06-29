@@ -80,5 +80,6 @@
         <file>images/pacman/pacmanup1.png</file>
         <file>images/pacman/pacmanup2.png</file>
         <file>images/pacman/pacmanup3.png</file>
+        <file>music/bgm.mp3</file>
     </qresource>
 </RCC>

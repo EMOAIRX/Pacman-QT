@@ -9,6 +9,9 @@
 #include <iostream>
 #include <QList>
 #include <QFile>
+#include <QMediaPlayer>
+#include <QMediaPlaylist>
+#include <QDir>
 #include <mainwindow.h>
 using namespace BaseH;
 
@@ -137,6 +140,13 @@ Game::Game(int WW,int HH,QString map_src,MainWindow* fa) : QGraphicsScene(50,50,
     ghost[1] -> strategy = chasing_pink(ghost[1],pacman);
     ghost[2] -> strategy = chasing_orange(ghost[2],ghost[0],pacman);
     ghost[3] -> strategy = chasing_blue(ghost[3],pacman);
+    QMediaPlaylist *playlist = new QMediaPlaylist;
+    QMediaPlayer *player = new QMediaPlayer;
+    playlist->addMedia(QUrl::fromLocalFile(QDir("../../../../pacman/music/bgm.mp3").absolutePath()));
+    playlist->setPlaybackMode(QMediaPlaylist::Loop);
+    player->setPlaylist(playlist);
+    player->setVolume(50);
+    player->play();
 
     this -> start();
 }
