@@ -199,7 +199,7 @@ namespace BaseH{
     
         \textbf{策略模块}
 	
-        在 \verb|ghost_strategies.cpp| ，我们实现了四个幽灵的行动策略，其中幽灵行动的方法参考 \href{https://www.mentalfloss.com/article/90874/your-pac-man-game-learning-different-strategies-each-ghost}{这里} 。
+        在 \verb|ghost_strategies.cpp| ，我们实现了四个幽灵的行动策略，其中幽灵行动的方法参考\href{https://www.mentalfloss.com/article/90874/your-pac-man-game-learning-different-strategies-each-ghost}{这里}。
 	
         一个\verb|chasing|函数获取ghost 和 pacman 的信息，返回一个函数 \verb|F|，函数 \verb|F| 可以被调用，每次被调用则返回依据当前地图局面确定的幽灵下一步应该行走的方向。
         \begin{lstlisting}
@@ -218,6 +218,7 @@ std::function<BaseH::dirstate()> chasing(Ghost *ghost,Pacman *pacman){
 
     特别感谢 吴槿昭助教（Scape哥哥）在项目开发中不厌其烦的指导和帮助。
 
+    仓库地址：\url{https://github.com/EMOAIRX/Pacman-QT}
 
     \subsection{小组分工}
     
