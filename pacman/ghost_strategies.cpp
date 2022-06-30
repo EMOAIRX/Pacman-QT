@@ -70,11 +70,11 @@ std::function<pii()> gdist = [=]() -> pii const{
             ,pacman->get_y() - ghost->get_y()};
 };
 return [=](){
-    //int disx,disy;
-    //disx = pacman->get_x() - ghost->get_x();
-    //disy = pacman->get_y() - ghost->get_y();
-    //if(disx*disx+disy*disy<32) return random(ghost->get_x(),ghost->get_y());
-    //    else
+    int disx,disy;
+    disx = pacman->get_x() - ghost->get_x();
+    disy = pacman->get_y() - ghost->get_y();
+    if(disx*disx+disy*disy<32) return random(ghost->get_x(),ghost->get_y());
+        else
     return deter_dir(gdist,ghost->get_x(),ghost->get_y(),ghost->get_curDir(),pacman->get_state());
 };
 };
