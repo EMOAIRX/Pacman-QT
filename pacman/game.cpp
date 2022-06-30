@@ -297,6 +297,7 @@ void Game::panic_handler(){
 
 void Game::start(){
     qDebug()<<"start"<<endl;
+    pacman->state=Normal;
     pacman->remain_panic_flash_time=0;
     pacman->remain_panic_time=0;
     pacman->reposition();//(startX+W*pacman->init_posx,startY+pacman->init_posy);
