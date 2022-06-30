@@ -142,7 +142,7 @@ Game::Game(int WW,int HH,QString map_src,MainWindow* fa) : QGraphicsScene(50,50,
     ghost[3] -> strategy = chasing_blue(ghost[3],pacman);
     QMediaPlaylist *playlist = new QMediaPlaylist;
     QMediaPlayer *player = new QMediaPlayer;
-    playlist->addMedia(QUrl::fromLocalFile(QDir("../../../../pacman/music/bgm.mp3").absolutePath()));
+    playlist->addMedia(QMediaContent(QUrl("qrc:/music/bgm.mp3")));
     playlist->setPlaybackMode(QMediaPlaylist::Loop);
     player->setPlaylist(playlist);
     player->setVolume(50);
