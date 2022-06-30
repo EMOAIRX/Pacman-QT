@@ -1,0 +1,230 @@
+\documentclass[UTF8,11pt]{ctexart}
+\usepackage{graphicx}
+\usepackage{enumerate}
+\usepackage{color}
+\usepackage{geometry}
+\usepackage{listings}
+\usepackage{xcolor}
+\usepackage{hyperref}
+
+\CTEXsetup[format={\Large\bfseries}]{section}
+
+\usepackage{xcolor} % 自定义颜色
+\definecolor{str_color}{RGB}{106,135,89} % 这几个颜色自行修改
+\definecolor{background_color}{RGB}{43,43,43}
+\definecolor{key_color}{RGB}{204,120,50}
+\definecolor{comment_color}{RGB}{128,128,128}
+
+\lstset{
+	basicstyle  =   \sffamily,          % 基本代码风格
+	keywordstyle =   \bfseries,          % 关键字风格
+	commentstyle =   \rmfamily\itshape,  % 注释的风格，斜体
+	stringstyle =   \ttfamily,  % 字符串风格
+	flexiblecolumns,                % 别问为什么，加上这个
+	numbers   =   left,   % 行号的位置在左边
+	showspaces  =   false,  % 是否显示空格，显示了有点乱，所以不现实了
+	numberstyle =   \zihao{-5}\ttfamily,    % 行号的样式，小五号，tt等宽字体
+	showstringspaces =   false,
+	frame  =   lrtb,   % 显示边框
+    breaklines = true,
+    language = c++,
+}
+
+
+
+\pagestyle{empty}
+
+\hypersetup{colorlinks=true,linkcolor=blue}
+
+\geometry{left=2.4cm,right=2.3cm,top=2.0cm,bottom=2.0cm}
+\title{基于QT的Pac-Man游戏}
+\date{}
+\begin{document}
+    \maketitle
+    \section{项目背景}
+    \subsection*{游戏简介}
+
+	\textbf{《吃豆人(Pac-Man)》}是一款最早由1980年日本\textbf{Namco}公司推出的街机游戏。
+
+	玩家操纵的角色（吃豆人）处于迷宫内，可以往某个方向前进，而玩家可以控制角色的方向。当角色与地图中的黄点发生碰撞就能将它吃掉，游戏的目标是将迷宫内的所有的黄点吃掉。游戏的中央有四个幽灵，会以各自的方式追逐玩家。当吃豆人被幽灵追上，则损失一点生命值并重新开始吃豆。地图的四周有四个闪烁的大黄点，一旦角色吃到大黄点即可开启疯狂状态，此时角色碰到幽灵则会使得幽灵逃回中央。
+    \section{项目内容}
+        我们使用的版本是\verb|Qt5.6.1|，使用的工具是\verb|Qmake|，运行环境需要将mingw文件夹加入环境变量。
+
+        我们利用\verb|C++|和\verb|Qt|，仿制了一个简单的吃豆人游戏。
+
+	    玩家可以使用 \verb|WSAD| 或 上下左右 控制吃豆人的移动，使用 \verb|Space| 暂停游戏，在游戏结束（胜利或失败）后可以按 \verb|Enter| 键重新开始新的一局游戏。
+        
+        \includegraphics[scale=0.14]{screenshoot.png}
+
+    \section{项目架构}
+        整个项目包括 5 个头文件，8 个C++的源文件，1个界面文件，以及地图资源，音乐资源和若干图片资源。
+
+        头文件：\verb|base.h|,\verb|game.h|,\verb|ghost.h|,\verb|mainwindow.h|,\verb|pacman.h|
+
+        源文件：\verb|base.cpp|, \verb|game.cpp|, \verb|ghost.cpp|, \verb|ghost_strategies.cpp| ,\verb|main.cpp|, \verb|mainwindow.cpp|, \verb|pacman.cpp|
+        
+        界面文件：\verb|mainwindow.ui| ，界面文件基本为空，控件和对象基本都在代码中生成。
+        
+        地图资源：位于 \verb|/map| 目录下，以 \verb|txt| 文本的形式保存了地图的样式。
+        
+        图片资源：位于 \verb|/images| 目录下，包括 \verb|/ghost| , \verb|/map_objects| , \verb|/pacman| 等子目录，内有 \verb|png| 图片，图片主要大小为 32*32。
+        
+        我们还加入了音乐等方面的设计，使玩家有一个良好的游戏体验。
+    \subsection{主要设想}
+        使用 \verb|Qtimer| 实现幽灵和吃豆人的移动，并在移动后进行碰撞判定
+
+	    对每个幽灵绑定一个策略，用于决策追踪方法。
+        
+	    当幽灵或吃豆人处于地图的整格转角处时，通过玩家已经按下的键盘和当前的游戏局面对下一步的方向进行决策。
+
+	    利用 \verb|QGraphicsPixmapItem| 和 \verb|QGraphicsScene| 实现图片的显示和移动。
+    \subsubsection*{基础参数}
+	    我们在 \verb|base.h| 中命名空间 \verb|BaseH| 中声明了一些基本参数，并在 \verb|base.cpp| 中定义和赋予了初值。
+        \begin{lstlisting}
+namespace BaseH{
+    enum mapstate{Space=0,Wall=1,Food=2,Medicine=3,Door=4,Portal=5};
+    enum pacmanstate{Normal=0,Panic=1};
+    enum ghoststate{Incave=0,Outingcave=1,Outcave=2,Backingcave=3};
+    enum dirstate{Left=0,Right=1,Up=2,Down=3,Stop=4};
+    enum stat{Start=0,Over=1,Pause=2};
+    extern const int deltax[5];
+    extern const int deltay[5];
+    extern int Width,Height,ObjectWidth;
+    extern int startX,startY;
+    extern int map[35][35];
+    extern const int INTERVAL_ghost,INTERVAL_pacman, INTERVAL_pacman_animation, INTERVAL_ghost_animation;
+    extern int doorx,doory;
+    extern const int INTERVAL_flash;
+    extern const int score_food,score_medicine;
+}
+        \end{lstlisting}
+
+        我们使用 Width * Height 的 int 数组来保存地图的状态，0表示空位，1表示墙，2表示小黄点，3表示闪烁的大黄点（药），4表示阻挡幽灵的门，5为传送门，用于将吃豆人从左侧传送到右侧。
+	
+        吃豆人的状态有两种，正常状态，或者是吃了大黄点（嗑药）的疯狂状态。
+	    
+        幽灵的状态有四种可能，在笼子中，正在出笼子，已经出了笼子，返回笼子的过程。
+	
+        游戏的状态有三种可能，正常进行，游戏结束，游戏暂停
+	
+        \verb|deltax=[-1,1,0,0,0]|和\verb|deltay=[0,0,-1,1,0]| 是为了方便吃豆人和幽灵的移动的实现而定义的常量数组。
+	
+        \verb|startX|和\verb|startY|表示整个地图左上角位于界面的位置。
+	
+        \verb|INTERVAL_ghost|表示用于控制幽灵移动的Qtimer的间隔时间，也即幽灵的移动速度
+	
+        \verb|INTERVAL_pacman|表示用于控制吃豆人移动的Qtimer的间隔时间，也即吃豆人的移动速度
+	
+        \verb|INTERVAL_pacman_animation|, \verb|INTERVAL_ghost_animation| 是为了实现吃豆人和幽灵移动时候的动画播放。
+	
+        \verb|INTERVAL_flash| 是为了实现大黄球（药）的闪烁
+	
+        我们在项目开始的时候大致设置了这些参数，以方便后续的开发。
+    \subsection{类的设计}
+        我们总共实现了如下的类 \verb|MainWindow|, \verb|Game|  , \verb|Base|, \verb|Pacman| , \verb|Ghost| 。其中 \verb|Pacman| 和 \verb|Ghost| 继承自 \verb|Base| ，具体设计如下:
+    \subsubsection{MainWindow}
+        用于创建窗口，显示窗口中的得分，游戏胜负状况，剩余血量。
+	
+        在构造函数中生成有一个 \verb|Game| 类的实例 \verb|game|。
+	
+        接受键盘输入信号，并传递给 \verb|game|。
+    
+        \textbf{数据显示模块}
+	
+        窗体内对象的显示为一些 \verb|QLabel| 的新建，而这些对象的通过一个 \verb|Qtime|r 实时更新，具体显示内容和样式与当前游戏状态，\verb|game|内的参数有关。
+
+        \textbf{Game}
+	
+        游戏类，主要成员对象为几乎所有的 \verb|Qtimer|，一个 \verb|Pacman| 类的实例 \verb|pacman|，四个 \verb|Ghost| 类的实例 \verb|ghost0|, ... \verb|ghost3|，可视化地图对象的实例 \verb|uimap|。
+	
+        在这个类里，我们实现了几乎所有的可视化。
+	
+        在这个类里，我们还给出一些对 \verb|pacman| 和 \verb|ghost| 操作的句柄。
+    
+    
+        \textbf{游戏的初始化}
+	
+        在这个类里，我们实现了游戏的初始化。
+	   
+        我们从 \verb|map1.txt| 文本中获取地图信息，一方面保存在 \verb|map| 数组中，另一方面用 以\verb|Base*| 为类型的 \verb|uimap|数组将地图信息以图片地形式呈现在界面上。
+	
+        同时，一依据地图信息，新建幽灵和吃豆人的对象，并对幽灵绑定行动策略。
+        
+        \textbf{游戏的开始暂停，结束与重启}
+	    
+        在这个类里，我们实现了游戏的开始，暂停，结束与重启
+        
+        开始函数主要是对\verb|pacman|以及\verb|ghost|的状态进行初始化，重启则主要是重新对地图进行构建。
+        
+        \textbf{动画模块}
+	
+        我们使用 \verb|pacman_animation_timer|，\verb|ghost_animation_timer| 对 \verb|pacman| 和 \verb|ghost| 进行动画显示，所需要的相应图片事先在对应实例名为 animations 的 Qvector 中保存，通过不断播放图片以实现动画的效果。
+        
+        \textbf{吃豆模块}
+	    
+        当吃豆人到达整点位置时，我们获取地图在当前格点的元素，并根据元素是小黄点（食物）或者是大黄点（药）对游戏，吃豆人，幽灵的状态进行改变。包括改变地图信息，对界面进行改变。
+
+        \subsubsection{Base}
+
+	    作为 Pacman 和 Ghost 的基类，存储有游戏物件的基本信息，实现了获取所在地图位置的坐标，判断移动是否合法，等基本功能。
+        且base是 QGraphicsScene的继承类，可以通过设置其图片以及位置来达到可视化的目标。
+
+        \subsubsection{Pacman}
+	    在这个类里，我们实现了吃豆人的相关函数，包括移动，碰撞判定
+        
+        \textbf{移动模块}
+	    
+        在这个模块里，我们实现了吃豆人的移动。
+    
+        首先我们获取了吃豆人的位置，并根据当前移动的方向，重新设置吃豆人的坐标，例如如果吃豆人所处的位置是传送门，那么将吃豆人传送到另一侧。
+    
+        其次，当吃豆人恰好处于地图的整格时，即可能发生方向的改变，我们在程序中依据先前按下的键盘，当前的方向，以及地图的信息和所处的坐标，得出下一个移动方向的信息。当处于整格时，也会进行其它方面的一些信息的同步与修改。
+
+        \subsubsection{Ghost}
+	    在这个类里，我们实现了幽灵的相关函数，包括四种状态下的移动，这里利用到了 \verb|ghost_strategies.cpp| 内的策略函数。
+        
+        \textbf{移动模块}
+	    
+        幽灵的移动方法实现与吃豆人移动方法实现类似，但根据幽灵所处的不同状态，拥有不同的移动策略。
+    
+        当幽灵处于\verb|Outcaving|状态时，即幽灵经过一定的静默状态后要出笼子的过程，我们通过设计让幽灵在走到门外，并禁止其再次通过门。
+    
+        当幽灵处于\verb|Incave|状态时，停止运动
+    
+        当幽灵处于\verb|Backingcave|状态时，通过最短路径返回初始点。
+    
+        当幽灵处于\verb|Outcave|状态时，通过调用相应的策略，追踪或者躲避Pacman。
+
+        \subsubsection{其它模块设计与实现}
+    
+        \textbf{策略模块}
+	
+        在 \verb|ghost_strategies.cpp| ，我们实现了四个幽灵的行动策略，其中幽灵行动的方法参考 \href{https://www.mentalfloss.com/article/90874/your-pac-man-game-learning-different-strategies-each-ghost}{这里} 。
+	
+        一个\verb|chasing|函数获取ghost 和 pacman 的信息，返回一个函数 \verb|F|，函数 \verb|F| 可以被调用，每次被调用则返回依据当前地图局面确定的幽灵下一步应该行走的方向。
+        \begin{lstlisting}
+std::function<BaseH::dirstate()> chasing(Ghost *ghost,Pacman *pacman){
+  return [=](){return (one of the dirstate);};
+};            
+        \end{lstlisting}
+
+    \section{项目总结与反思}
+
+    我们对该项目的开发尽然有序，在开发过程中广泛交流讨论，使得我们的开发并没有出现太多的不协调的障碍。
+
+    但由于一些原因，我们只实现了较为基础的部分，最初一些的好的设想没来得及加入。
+
+    在项目开发过程中熟悉掌握了 \verb|Qt| 和 \verb|Git| 的用法，了解了多人协同开发的简单形式，也初步了解了包括链接。多文件编译在内的知识，受益匪浅。
+
+    特别感谢 吴槿昭助教（Scape哥哥）在项目开发中不厌其烦的指导和帮助。
+
+
+    \subsection{小组分工}
+    
+    陈奇之：主要是移动等模块的代码编写
+
+    黄骏齐：主要是可视化的实现，数据的读取与加载，前后端交互
+
+    张家梁：主要是面向用户的设计，包括界面设计，资料收集，美工等
+
+\end{document}
